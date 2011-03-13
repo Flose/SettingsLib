@@ -96,16 +96,25 @@ Public Class Test_File
 
     <Test()>
     Public Sub Test_put_DateTime_Save_and_Open()
-        Dim key As String = "TestDat"
-        Dim value As DateTime = New DateTime(477843578992835735)
+        Test_put_DateTime_Save_and_Open(New DateTime(477843578992835735))
+        Test_put_DateTime_Save_and_Open(New DateTime(477843578992835735, DateTimeKind.Utc))
+        Test_put_DateTime_Save_and_Open(New DateTime(477843578992835735, DateTimeKind.Local))
+        Test_put_DateTime_Save_and_Open(New DateTime(477843578992835735, DateTimeKind.Unspecified))
+        Test_put_DateTime_Save_and_Open(New DateTime(0))
+        Test_put_DateTime_Save_and_Open(New DateTime(DateTime.MinValue.Ticks))
+        Test_put_DateTime_Save_and_Open(New DateTime(DateTime.MaxValue.Ticks))
+    End Sub
 
-        settings.putDateTime(key, value)
+    Public Sub Test_put_DateTime_Save_and_Open(ByVal datum As DateTime)
+        Dim key As String = "TestDat"
+
+        settings.putDateTime(key, datum)
         Dim temp As String = IO.Path.GetTempFileName
         settings.save(temp)
 
         Dim tmpSettings As New SettingsFile(temp)
 
-        Assert.AreEqual(value, tmpSettings.getDateTime(key))
+        Assert.AreEqual(datum, tmpSettings.getDateTime(key))
         IO.File.Delete(temp)
     End Sub
 
