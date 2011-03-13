@@ -28,7 +28,7 @@ Public Class SettingsFile
             End If
             previousWasSlash = (c = "/"c)
         Next
-        Return key
+        Return sb.ToString
     End Function
 
     Private Sub putValue(ByVal key As String, ByVal value As Object)
@@ -62,7 +62,7 @@ Public Class SettingsFile
         putValue(key, value)
     End Sub
 
-    Public Sub putDate(ByVal key As String, ByVal value As Date)
+    Public Sub putDate(ByVal key As String, ByVal value As DateTime)
         putValue(key, value)
     End Sub
 
@@ -87,28 +87,28 @@ Public Class SettingsFile
         Else
             Return defaultValue
         End If
-        If TypeOf val Is Type Then
+        If type.IsAssignableFrom(val.GetType) Then
             Return val
         End If
         'TODO: throw Exception ?
-        Console.Error.WriteLine("Tried to read """ & key & """ as """ & type.ToString & """, but it's a """ & key.GetType.ToString & """")
+        Console.Error.WriteLine("Tried to read """ & key & """ as """ & type.ToString & """, but it's a """ & val.GetType.ToString & """")
         Return defaultValue
     End Function
 
-    Public Function getString(ByVal key As String, ByVal defaultValue As String) As String
+    Public Function getString(ByVal key As String, Optional ByVal defaultValue As String = "") As String
         Dim val As Object = getValue(key, defaultValue, GetType(String))
         Return DirectCast(val, String)
 
     End Function
 
-    Public Function getInteger(ByVal key As String, ByVal defaultValue As Integer) As Integer
+    Public Function getInteger(ByVal key As String, Optional ByVal defaultValue As Integer = 0) As Integer
         Dim val As Object = getValue(key, defaultValue, GetType(Integer))
         Return DirectCast(val, Integer)
     End Function
 
-    Public Function getDate(ByVal key As String, ByVal defaultValue As Date) As Date
-        Dim val As Object = getValue(key, defaultValue, GetType(Date))
-        Return DirectCast(val, Date)
+    Public Function getDateTime(ByVal key As String, Optional ByVal defaultValue As DateTime = Nothing) As DateTime
+        Dim val As Object = getValue(key, defaultValue, GetType(DateTime))
+        Return DirectCast(val, DateTime)
     End Function
 
     Public Sub open(ByVal fileName As String)
@@ -166,12 +166,12 @@ Public Class SettingsFile
     End Sub
 
     Private Function getValueFromSaveString(ByVal value As String, ByVal type As Type) As Object
-        If type Is GetType(String) Then ' GetType(String).IsAssignableFrom(type) Then
+        If GetType(String).IsAssignableFrom(type) Then
             Return value
-        ElseIf type Is GetType(Integer) Then
+        ElseIf GetType(Integer).IsAssignableFrom(type) Then
             Return Integer.Parse(value)
-        ElseIf type Is GetType(Date) Then
-            Return New Date(Integer.Parse(value))
+        ElseIf GetType(DateTime).IsAssignableFrom(type) Then
+            Return New DateTime(Integer.Parse(value))
         Else
             'Unknown Object type
             Return value
@@ -196,8 +196,8 @@ Public Class SettingsFile
             Return DirectCast(value, String)
         ElseIf TypeOf value Is Integer Then
             Return value.ToString
-        ElseIf TypeOf value Is Date Then
-            Return DirectCast(value, Date).Ticks.ToString
+        ElseIf TypeOf value Is DateTime Then
+            Return DirectCast(value, DateTime).Ticks.ToString
         Else
             'Unknown Object type
             Return ""
