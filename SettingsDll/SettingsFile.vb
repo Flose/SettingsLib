@@ -101,7 +101,6 @@ Public Class SettingsFile
     Public Function getString(ByVal key As String, Optional ByVal defaultValue As String = "") As String
         Dim val As Object = getValue(key, defaultValue, GetType(String))
         Return DirectCast(val, String)
-
     End Function
 
     Public Function getInteger(ByVal key As String, Optional ByVal defaultValue As Integer = 0) As Integer
@@ -183,7 +182,7 @@ Public Class SettingsFile
 
     Public Sub save(ByVal fileName As String)
         Using Writer As New StreamWriter(fileName, False, System.Text.Encoding.UTF8)
-            Writer.NewLine = vbCr
+            Writer.NewLine = vbCrLf
             For Each category As KeyValuePair(Of String, IDictionary(Of String, Object)) In settings
                 Writer.WriteLine("[" & EscapeString(category.Key) & "]")
                 For Each kv As KeyValuePair(Of String, Object) In category.Value

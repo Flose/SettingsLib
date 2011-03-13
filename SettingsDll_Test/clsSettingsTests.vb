@@ -203,4 +203,58 @@ Public Class Test_Empty_File
         settings.save(temp)
         settings = New SettingsFile(temp)
     End Sub
+
+    <Test()>
+    Public Sub Test_Save_and_Open_File_Change_Line_delimiter()
+        'Save File
+        Dim settings As New SettingsFile()
+        Dim temp As String = IO.Path.GetTempFileName
+        Dim key1, key2, key3 As String
+        key1 = "fjsdk"
+        key2 = "fjdslkfjdslk"
+        key3 = "nwiou"
+        Dim val1 As Integer = 434
+        Dim val2 As String = "fjdioe830fjsdak$%§)="
+        Dim val3 As DateTime = Now.ToUniversalTime
+        settings.putInteger(key1, val1)
+        settings.putString(key2, val2)
+        settings.putDateTime(key3, val3)
+        settings.save(temp)
+
+        'Open file
+        settings = New SettingsFile(temp)
+        Assert.AreEqual(settings.getInteger(key1), val1)
+        Assert.AreEqual(settings.getString(key2), val2)
+        Assert.AreEqual(settings.getDateTime(key3), val3)
+
+        'Replace line delimiters
+        Dim text As String = IO.File.ReadAllText(temp)
+
+        'with vbLf
+        Dim replacedText As String = text.Replace(vbCrLf, vbLf)
+        IO.File.WriteAllText(temp, replacedText)
+        Assert.False(IO.File.ReadAllText(temp).Contains(vbCrLf))
+        Assert.False(IO.File.ReadAllText(temp).Contains(vbCr))
+        Assert.True(IO.File.ReadAllText(temp).Contains(vbLf))
+
+        settings = New SettingsFile(temp)
+        Assert.AreEqual(settings.getInteger(key1), val1)
+        Assert.AreEqual(settings.getString(key2), val2)
+        Assert.AreEqual(settings.getDateTime(key3), val3)
+
+        'with vbCr
+        replacedText = text.Replace(vbCrLf, vbCr)
+        IO.File.WriteAllText(temp, replacedText)
+        Assert.False(IO.File.ReadAllText(temp).Contains(vbCrLf))
+        Assert.False(IO.File.ReadAllText(temp).Contains(vbLf))
+        Assert.True(IO.File.ReadAllText(temp).Contains(vbCr))
+
+        settings = New SettingsFile(temp)
+        Assert.AreEqual(settings.getInteger(key1), val1)
+        Assert.AreEqual(settings.getString(key2), val2)
+        Assert.AreEqual(settings.getDateTime(key3), val3)
+
+        'Clean up
+        IO.File.Delete(temp)
+    End Sub
 End Class
