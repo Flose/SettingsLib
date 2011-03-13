@@ -109,6 +109,61 @@ Public Class Test_File
         IO.File.Delete(temp)
     End Sub
 
+    <Test()>
+    Public Sub Test_correct_Key()
+        Test_correct_Key("abc", "/abc")
+        Test_correct_Key("//abc", "/abc")
+        Test_correct_Key("//a///bc", "/a/bc")
+        Test_correct_Key("=abc", "/_abc")
+        Test_correct_Key("/m  ann/t==e/fjdk""""sfjdkTe///s" & vbTab & "t=D""""a  t//", "/m__ann/t__e/fjdk""""sfjdkTe/s" & vbTab & "t_D""""a__t")
+    End Sub
+
+    Private Sub Test_correct_Key(ByVal key As String, ByVal correctKey As String)
+        Dim actual As String = DirectCast(UnitTestUtilities.RunInstanceMethod("correctKey", settings, New String() {key}), String)
+        Assert.AreEqual(correctKey, actual)
+
+        actual = DirectCast(UnitTestUtilities.RunInstanceMethod("correctKey", settings, New String() {correctKey}), String)
+        Assert.AreEqual(correctKey, actual)
+    End Sub
+
+    <Test()>
+    Public Sub Test_put_String_correct_Key()
+        Dim key As String = "/m  ann/t==e/fjdk""""sfjdkTe///s" & vbTab & "t=D""""a  t//"
+        Dim correctKey As String = "/m__ann/t__e/fjdk""""sfjdkTe/s" & vbTab & "t_D""""a__t"
+
+        Dim value As String = "fds  fs()=="""""
+
+        settings.putString(key, value)
+        Dim temp As String = IO.Path.GetTempFileName
+        settings.save(temp)
+
+        Dim tmpSettings As New SettingsFile(temp)
+        Assert.AreEqual(value, tmpSettings.getString(key))
+        Assert.AreEqual(value, tmpSettings.getString(correctKey))
+
+        IO.File.Delete(temp)
+    End Sub
+
+    <Test()>
+    Public Sub Test_put_String_correct_Key_Open_and_Save()
+        Dim key As String = "/m  ann/t==e/fjdk""""sfjdkTe///s" & vbTab & "t=D""""a  t//"
+        Dim correctKey As String = "/m__ann/t__e/fjdk""""sfjdkTe/s" & vbTab & "t_D""""a__t"
+
+        Dim value As String = "fds  fs()=="""""
+
+        settings.putString(key, value)
+        Assert.AreEqual(value, settings.getString(key))
+
+        Assert.AreEqual(value, settings.getString(correctKey))
+
+
+        value = "fdsa><dfds  fs()=fdsfasd="""""
+
+        settings.putString(correctKey, value)
+        Assert.AreEqual(value, settings.getString(correctKey))
+
+        Assert.AreEqual(value, settings.getString(key))
+    End Sub
 End Class
 
 Public Class Test_Empty_File
