@@ -62,7 +62,7 @@ Public Class SettingsFile
         putValue(key, value)
     End Sub
 
-    Public Sub putDate(ByVal key As String, ByVal value As DateTime)
+    Public Sub putDateTime(ByVal key As String, ByVal value As DateTime)
         putValue(key, value)
     End Sub
 
