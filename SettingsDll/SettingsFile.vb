@@ -146,8 +146,8 @@ Public Class SettingsFile
                         Continue While
                     End Try
 
-                    Dim valEndeIndex As Integer = line.LastIndexOf("""", valAnfangIndex + 1)
-                    If valEndeIndex = -1 Then Continue While 'ungültige zeile
+                    Dim valEndeIndex As Integer = line.LastIndexOf("""")
+                    If valEndeIndex = -1 OrElse valEndeIndex <= valAnfangIndex Then Continue While 'ungültige zeile
 
                     Dim valueString As String = UnEscapeString(line.Substring(valAnfangIndex + 1, valEndeIndex - valAnfangIndex - 1).Trim)
                     Dim val As Object
