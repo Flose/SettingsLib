@@ -23,11 +23,14 @@ Public Class SettingsFile
         Dim previousWasSlash As Boolean = False
         For Each c As Char In key
             If previousWasSlash AndAlso c = "/"c Then Continue For
-            If c <> " " AndAlso c <> "[" AndAlso c <> "]" Then
+            If c <> " " AndAlso c <> "[" AndAlso c <> "]" AndAlso c <> "=" Then
                 sb.Append(c)
+            Else
+                sb.Append("_")
             End If
             previousWasSlash = (c = "/"c)
         Next
+        If sb.Chars(sb.Length - 1) = "/"c Then sb.Remove(sb.Length - 1, 1)
         Return sb.ToString
     End Function
 
