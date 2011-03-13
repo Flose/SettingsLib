@@ -171,7 +171,7 @@ Public Class SettingsFile
         ElseIf GetType(Integer).IsAssignableFrom(type) Then
             Return Integer.Parse(value)
         ElseIf GetType(DateTime).IsAssignableFrom(type) Then
-            Return New DateTime(Integer.Parse(value))
+            Return DateTime.FromBinary(Long.Parse(value))
         Else
             'Unknown Object type
             Return value
@@ -197,7 +197,7 @@ Public Class SettingsFile
         ElseIf TypeOf value Is Integer Then
             Return value.ToString
         ElseIf TypeOf value Is DateTime Then
-            Return DirectCast(value, DateTime).Ticks.ToString
+            Return DirectCast(value, DateTime).ToBinary.ToString
         Else
             'Unknown Object type
             Return ""
