@@ -205,7 +205,7 @@ Public Class SettingsFile
     End Function
 
     Private Function EscapeString(ByVal text As String) As String
-        Return text.Replace("\", "\\").Replace(vbCr, "\n")
+        Return text.Replace("\", "\\").Replace(vbCr, "\n").Replace(vbLf, "\r")
     End Function
 
     Private Function UnEscapeString(ByVal text As String) As String
@@ -218,6 +218,8 @@ Public Class SettingsFile
                 If escaping Then
                     If c = "n" Then
                         t.Append(vbCr)
+                    ElseIf c = "r" Then
+                        t.Append(vbLf)
                     Else
                         t.Append(c)
                     End If
