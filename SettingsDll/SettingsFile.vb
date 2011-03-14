@@ -118,53 +118,57 @@ Public Class SettingsFile
         If Not File.Exists(fileName) Then Exit Sub
 
         Using Reader As New StreamReader(fileName, System.Text.Encoding.UTF8, True)
-            Dim currentCategory As String = "/"
-            While Not Reader.EndOfStream()
-                Dim line As String = Reader.ReadLine().TrimStart(New Char() {" "c})
-                If String.IsNullOrEmpty(line) Then Continue While 'Leerzeile
-                If line.Chars(0) = ";" Then Continue While 'Kommentarzeile
-
-                If line.Chars(0) = "[" Then
-                    Dim li As Integer = line.LastIndexOf("]")
-                    If li = -1 Then Continue While 'ungültige zeile
-
-                    currentCategory = line.Substring(1, li - 2) & "/"
-                Else
-                    Dim keyEndeIndex As Integer = line.IndexOf("=")
-                    If keyEndeIndex = -1 Then Continue While 'ungültige zeile
-
-                    Dim key As String = line.Substring(0, keyEndeIndex - 1).TrimEnd(" "c)
-
-                    Dim valAnfangIndex As Integer = line.IndexOf("""", keyEndeIndex)
-                    If valAnfangIndex = -1 Then Continue While 'ungültige zeile
-
-                    Dim valueType As Type
-                    Try
-                        Dim typeString As String = line.Substring(keyEndeIndex + 1, valAnfangIndex - keyEndeIndex - 1).Trim
-                        valueType = System.Type.GetType(typeString)
-                    Catch ex As Exception
-                        Console.Error.WriteLine("Error while loading key """ & key & """: " & ex.Message)
-                        Console.Error.WriteLine("  Ignoring line.")
-                        Continue While
-                    End Try
-
-                    Dim valEndeIndex As Integer = line.LastIndexOf("""")
-                    If valEndeIndex = -1 OrElse valEndeIndex <= valAnfangIndex Then Continue While 'ungültige zeile
-
-                    Dim valueString As String = UnEscapeString(line.Substring(valAnfangIndex + 1, valEndeIndex - valAnfangIndex - 1).Trim)
-                    Dim val As Object
-                    Try
-                        val = getValueFromSaveString(valueString, valueType)
-                    Catch ex As Exception
-                        Console.Error.WriteLine("Error while loading key """ & key & """: " & ex.Message)
-                        Console.Error.WriteLine("  Ignoring line.")
-                        Continue While
-                    End Try
-
-                    putValue(currentCategory & key, val)
-                End If
-            End While
+            open(Reader)
         End Using
+    End Sub
+
+    Private Sub open(ByVal Reader As StreamReader)
+        Dim currentCategory As String = "/"
+        While Not Reader.EndOfStream()
+            Dim line As String = Reader.ReadLine().TrimStart(New Char() {" "c})
+            If String.IsNullOrEmpty(line) Then Continue While 'Leerzeile
+            If line.Chars(0) = ";" Then Continue While 'Kommentarzeile
+
+            If line.Chars(0) = "[" Then
+                Dim li As Integer = line.LastIndexOf("]")
+                If li = -1 Then Continue While 'ungültige zeile
+
+                currentCategory = line.Substring(1, li - 2) & "/"
+            Else
+                Dim keyEndeIndex As Integer = line.IndexOf("=")
+                If keyEndeIndex = -1 Then Continue While 'ungültige zeile
+
+                Dim key As String = line.Substring(0, keyEndeIndex - 1).TrimEnd(" "c)
+
+                Dim valAnfangIndex As Integer = line.IndexOf("""", keyEndeIndex)
+                If valAnfangIndex = -1 Then Continue While 'ungültige zeile
+
+                Dim valueType As Type
+                Try
+                    Dim typeString As String = line.Substring(keyEndeIndex + 1, valAnfangIndex - keyEndeIndex - 1).Trim
+                    valueType = System.Type.GetType(typeString)
+                Catch ex As Exception
+                    Console.Error.WriteLine("Error while loading key """ & key & """: " & ex.Message)
+                    Console.Error.WriteLine("  Ignoring line.")
+                    Continue While
+                End Try
+
+                Dim valEndeIndex As Integer = line.LastIndexOf("""")
+                If valEndeIndex = -1 OrElse valEndeIndex <= valAnfangIndex Then Continue While 'ungültige zeile
+
+                Dim valueString As String = UnEscapeString(line.Substring(valAnfangIndex + 1, valEndeIndex - valAnfangIndex - 1).Trim)
+                Dim val As Object
+                Try
+                    val = getValueFromSaveString(valueString, valueType)
+                Catch ex As Exception
+                    Console.Error.WriteLine("Error while loading key """ & key & """: " & ex.Message)
+                    Console.Error.WriteLine("  Ignoring line.")
+                    Continue While
+                End Try
+
+                putValue(currentCategory & key, val)
+            End If
+        End While
     End Sub
 
     Private Function getValueFromSaveString(ByVal value As String, ByVal type As Type) As Object
@@ -183,14 +187,18 @@ Public Class SettingsFile
     Public Sub save(ByVal fileName As String)
         Using Writer As New StreamWriter(fileName, False, System.Text.Encoding.UTF8)
             Writer.NewLine = vbCrLf
-            For Each category As KeyValuePair(Of String, IDictionary(Of String, Object)) In settings
-                Writer.WriteLine("[" & EscapeString(category.Key) & "]")
-                For Each kv As KeyValuePair(Of String, Object) In category.Value
-                    Writer.WriteLine(EscapeString(kv.Key) & " = " & kv.Value.GetType.ToString & """" & EscapeString(getValueSaveString(kv.Value)) & """") 'TODO schaun wie das mit unterklassen ist
-                Next
-                Writer.WriteLine()
-            Next
+            save(Writer)
         End Using
+    End Sub
+
+    Private Sub save(ByVal Writer As StreamWriter)
+        For Each category As KeyValuePair(Of String, IDictionary(Of String, Object)) In settings
+            Writer.WriteLine("[" & EscapeString(category.Key) & "]")
+            For Each kv As KeyValuePair(Of String, Object) In category.Value
+                Writer.WriteLine(EscapeString(kv.Key) & " = " & kv.Value.GetType.ToString & """" & EscapeString(getValueSaveString(kv.Value)) & """") 'TODO schaun wie das mit unterklassen ist
+            Next
+            Writer.WriteLine()
+        Next
     End Sub
 
     Private Function getValueSaveString(ByVal value As Object) As String
