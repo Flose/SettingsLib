@@ -69,6 +69,17 @@ Public Class SettingsFile
         putValue(key, value)
     End Sub
 
+    Public Function getAll() As Dictionary(Of String, Object)
+        Dim currentCategory As String, tmpList As New Dictionary(Of String, Object)
+        For Each c As KeyValuePair(Of String, IDictionary(Of String, Object)) In settings
+            currentCategory = c.Key
+            For Each v As KeyValuePair(Of String, Object) In c.Value
+                tmpList.Add(currentCategory & v.Key, v.Value)
+            Next
+        Next
+        Return tmpList
+    End Function
+
     Private Function getValue(ByVal key As String, ByVal defaultValue As Object, ByVal type As Type) As Object
         If type Is Nothing Then Return Nothing
 

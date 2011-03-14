@@ -205,6 +205,71 @@ Public Class Test_Empty_File
     End Sub
 
     <Test()>
+    Public Sub Test_Get_All_Empty()
+        Dim settings As New SettingsFile()
+        Assert.AreEqual(0, settings.getAll.Count)
+    End Sub
+
+    <Test()>
+    Public Sub Test_Get_All_Add_One()
+        Dim settings As New SettingsFile()
+        Dim key As String = "jfds03/fjdskj84jl"
+        Dim correctKey As String = DirectCast(UnitTestUtilities.RunInstanceMethod("correctKey", settings, New String() {key}), String)
+        Dim value As String = "fjsad83fjds229/$)§"
+        settings.putString(key, value)
+        Assert.AreEqual(1, settings.getAll.Count)
+        Assert.AreEqual(value, settings.getAll.Item(correctKey))
+    End Sub
+
+    <Test()>
+    Public Sub Test_Get_All_Add_One_Thrice()
+        Dim settings As New SettingsFile()
+        Dim key As String = "jfds03/fjdskj84jl"
+        Dim correctKey As String = DirectCast(UnitTestUtilities.RunInstanceMethod("correctKey", settings, New String() {key}), String)
+        Dim value As String = "fjsad83fjds229/$)§"
+        settings.putString(key, value)
+        Assert.AreEqual(1, settings.getAll.Count)
+        Assert.AreEqual(value, settings.getAll.Item(correctKey))
+
+        value = "fjafsdjf93474/(/)$§sad83fjds229/$)§"
+        settings.putString(key, value)
+
+        Assert.AreEqual(1, settings.getAll.Count)
+        Assert.AreEqual(value, settings.getAll.Item(correctKey))
+
+        Dim value2 As DateTime = New DateTime(48934384339)
+        settings.putDateTime(key, value2)
+
+        Assert.AreEqual(1, settings.getAll.Count)
+        Assert.AreEqual(value2, settings.getAll.Item(correctKey))
+    End Sub
+
+    <Test()>
+    Public Sub Test_Get_All_Add_Three()
+        Dim settings As New SettingsFile()
+        Dim key As String = "jfds03/fjdskj84jl"
+        Dim correctKey As String = DirectCast(UnitTestUtilities.RunInstanceMethod("correctKey", settings, New String() {key}), String)
+        Dim value As String = "fjsad83fjds229/$)§"
+        settings.putString(key, value)
+        Assert.AreEqual(1, settings.getAll.Count)
+        Assert.AreEqual(value, settings.getAll.Item(correctKey))
+
+        key = "jfds03/43==fjdskj84jl"
+        correctKey = DirectCast(UnitTestUtilities.RunInstanceMethod("correctKey", settings, New String() {key}), String)
+        value = "fjafsdjf93474/(/)$§sad83fjds229/$)§"
+        settings.putString(key, value)
+        Assert.AreEqual(2, settings.getAll.Count)
+        Assert.AreEqual(value, settings.getAll.Item(correctKey))
+
+        key = "///==""%&/jfds03/43==fjdskj84jl"
+        correctKey = DirectCast(UnitTestUtilities.RunInstanceMethod("correctKey", settings, New String() {key}), String)
+        Dim value2 As Integer = 489343843
+        settings.putInteger(key, value2)
+        Assert.AreEqual(3, settings.getAll.Count)
+        Assert.AreEqual(value2, settings.getAll.Item(correctKey))
+    End Sub
+
+    <Test()>
     Public Sub Test_Save_and_Open_File_Change_Line_delimiter()
         'Save File
         Dim settings As New SettingsFile()
