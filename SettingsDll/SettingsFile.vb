@@ -140,44 +140,65 @@ Public Class SettingsFile
 
             If line.Chars(0) = "[" Then
                 Dim li As Integer = line.LastIndexOf("]")
-                If li = -1 Then Continue While 'ungültige zeile
+                If li = -1 Then 'ungültige zeile
+                    WriteErrorToConsole("Error while opening: Missing ] at the end")
+                    WriteErrorToConsole("=> Ignoring line: " & line)
+                    Continue While
+                End If
 
                 currentCategory = line.Substring(1, li - 2) & "/"
             Else
                 Dim keyEndeIndex As Integer = line.IndexOf("=")
-                If keyEndeIndex = -1 Then Continue While 'ungültige zeile
+                If keyEndeIndex = -1 Then 'ungültige zeile
+                    WriteErrorToConsole("Error while opening: Missing = after KeyName")
+                    WriteErrorToConsole("=> Ignoring line: " & line)
+                    Continue While
+                End If
 
                 Dim key As String = line.Substring(0, keyEndeIndex - 1).TrimEnd(" "c)
 
                 Dim valAnfangIndex As Integer = line.IndexOf("""", keyEndeIndex)
-                If valAnfangIndex = -1 Then Continue While 'ungültige zeile
+                If valAnfangIndex = -1 Then 'ungültige zeile
+                    WriteErrorToConsole("Error while opening key """ & key & """: Missing "" after =")
+                    WriteErrorToConsole("=> Ignoring line: " & line)
+                    Continue While
+                End If
 
                 Dim valueType As Type
                 Try
                     Dim typeString As String = line.Substring(keyEndeIndex + 1, valAnfangIndex - keyEndeIndex - 1).Trim
-                    valueType = System.Type.GetType(typeString)
+                    valueType = System.Type.GetType(typeString) 'bei ungültigem Typ ist valueType nothing, und Typ String wird angenommen
                 Catch ex As Exception
-                    Console.Error.WriteLine("Error while loading key """ & key & """: " & ex.Message)
-                    Console.Error.WriteLine("  Ignoring line.")
+                    WriteErrorToConsole("Error while opening key """ & key & """: " & ex.Message)
+                    WriteErrorToConsole("=> Ignoring line: " & line)
                     Continue While
                 End Try
 
                 Dim valEndeIndex As Integer = line.LastIndexOf("""")
-                If valEndeIndex = -1 OrElse valEndeIndex <= valAnfangIndex Then Continue While 'ungültige zeile
+                If valEndeIndex = -1 OrElse valEndeIndex <= valAnfangIndex Then 'ungültige zeile
+                    WriteErrorToConsole("Error while opening key """ & key & """: Missing "" at the end")
+                    WriteErrorToConsole("=> Ignoring line: " & line)
+                    Continue While
+                End If
+
 
                 Dim valueString As String = UnEscapeString(line.Substring(valAnfangIndex + 1, valEndeIndex - valAnfangIndex - 1).Trim)
                 Dim val As Object
                 Try
                     val = getValueFromSaveString(valueString, valueType)
                 Catch ex As Exception
-                    Console.Error.WriteLine("Error while loading key """ & key & """: " & ex.Message)
-                    Console.Error.WriteLine("  Ignoring line.")
+                    WriteErrorToConsole("Error while opening key """ & key & """: " & ex.Message)
+                    WriteErrorToConsole("=> Ignoring line: " & line)
                     Continue While
                 End Try
 
                 putValue(currentCategory & key, val)
             End If
         End While
+    End Sub
+
+    Private Sub WriteErrorToConsole(ByVal message As String)
+        Console.Error.WriteLine("SettingsFile: " & message)
     End Sub
 
     Private Function getValueFromSaveString(ByVal value As String, ByVal type As Type) As Object
