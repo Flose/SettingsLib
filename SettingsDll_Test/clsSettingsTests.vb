@@ -355,4 +355,19 @@ Public Class Test_Empty_File
         'Clean up
         IO.File.Delete(temp)
     End Sub
+
+    <Test()>
+    Public Sub Test_Get_Default_Value()
+        Dim settings As New SettingsFile()
+        Assert.AreEqual(settings.getString("aber", "321ge"), "321ge")
+        Assert.AreEqual(settings.getString("aber", "54554"), "54554")
+        Assert.AreEqual(settings.getInteger("aber", 4434342), 4434342)
+        Assert.AreEqual(settings.getInteger("aber", 1234), 1234)
+        Dim d As New DateTime(43477238473)
+        Assert.AreEqual(settings.getDateTime("aber", d), d)
+        d = New DateTime(434772434338473)
+        Assert.AreEqual(settings.getDateTime("aber", d), d)
+        Assert.AreEqual(settings.getBoolean("aber", True), True)
+        Assert.AreEqual(settings.getBoolean("aber", False), False)
+    End Sub
 End Class
