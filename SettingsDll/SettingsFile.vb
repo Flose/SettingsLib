@@ -104,9 +104,7 @@ Public Class SettingsFile
         If type.IsAssignableFrom(val.GetType) Then
             Return val
         End If
-        'TODO: throw Exception ?
-        Console.Error.WriteLine("Tried to read """ & key & """ as """ & type.ToString & """, but it's a """ & val.GetType.ToString & """")
-        Return defaultValue
+        Throw New SettingsFileException("Tried to read """ & key & """ as """ & type.ToString & """, but it's a """ & val.GetType.ToString & """")
     End Function
 
     Public Function getString(ByVal key As String, Optional ByVal defaultValue As String = "") As String
@@ -252,4 +250,20 @@ Public Class SettingsFile
         Next
         Return t.ToString
     End Function
+End Class
+
+Public Class SettingsFileException
+    Inherits System.Exception
+
+    Public Sub New(ByVal info As Runtime.Serialization.SerializationInfo, ByVal context As Runtime.Serialization.StreamingContext)
+        MyBase.new(info, context)
+    End Sub
+
+    Public Sub New(ByVal message As String)
+        Me.New(message, Nothing)
+    End Sub
+
+    Public Sub New(ByVal message As String, ByVal innerException As Exception)
+        MyBase.New(message, innerException)
+    End Sub
 End Class
