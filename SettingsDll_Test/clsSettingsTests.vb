@@ -25,6 +25,20 @@ Public Class Test_File
     End Sub
 
     <Test()>
+    Public Sub Test_put_Boolean()
+        Dim key As String = "Test"
+        Dim value As Boolean = True
+        settings.putBoolean(key, value)
+        Assert.AreEqual(value, settings.getBoolean(key))
+
+        value = False
+        Assert.AreNotEqual(value, settings.getBoolean(key))
+
+        settings.putBoolean(key, value)
+        Assert.AreEqual(value, settings.getBoolean(key))
+    End Sub
+
+    <Test()>
     Public Sub Test_put_String()
         Test_put_String("fdfads534f      5" & vbTab & vbCr & "fjdsk" & vbCrLf & "fjdak" & vbLf)
         Test_put_String("jfdsalf839fjsdklafj jfaefdjsia\n\\n" & vbCr & "fjdk" & vbCrLf & "fjdk?)&" & ChrW(43438) & vbLf)
@@ -76,6 +90,25 @@ Public Class Test_File
         Dim tmpSettings As New SettingsFile(temp)
 
         Assert.AreEqual(text, tmpSettings.getString(key))
+        IO.File.Delete(temp)
+    End Sub
+
+    <Test()>
+    Public Sub Test_put_Boolean_Save_and_Open()
+        Test_put_Boolean_Save_and_Open(True)
+        Test_put_Boolean_Save_and_Open(False)
+    End Sub
+
+    Private Sub test_put_Boolean_save_and_open(ByVal val As Boolean)
+        Dim key As String = "TestSt"
+
+        settings.putBoolean(key, val)
+        Dim temp As String = IO.Path.GetTempFileName
+        settings.save(temp)
+
+        Dim tmpSettings As New SettingsFile(temp)
+
+        Assert.AreEqual(val, tmpSettings.getBoolean(key))
         IO.File.Delete(temp)
     End Sub
 

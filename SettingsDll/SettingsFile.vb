@@ -69,6 +69,10 @@ Public Class SettingsFile
         putValue(key, value)
     End Sub
 
+    Public Sub putBoolean(ByVal key As String, ByVal value As Boolean)
+        putValue(key, value)
+    End Sub
+
     Public Function getAll() As Dictionary(Of String, Object)
         Dim currentCategory As String, tmpList As New Dictionary(Of String, Object)
         For Each c As KeyValuePair(Of String, IDictionary(Of String, Object)) In settings
@@ -120,6 +124,11 @@ Public Class SettingsFile
     Public Function getDateTime(ByVal key As String, Optional ByVal defaultValue As DateTime = Nothing) As DateTime
         Dim val As Object = getValue(key, defaultValue, GetType(DateTime))
         Return DirectCast(val, DateTime)
+    End Function
+
+    Public Function getBoolean(ByVal key As String, Optional ByVal defaultValue As Boolean = False) As Boolean
+        Dim val As Object = getValue(key, defaultValue, GetType(Boolean))
+        Return DirectCast(val, Boolean)
     End Function
 
     Public Sub open(ByVal fileName As String)
@@ -208,6 +217,12 @@ Public Class SettingsFile
             Return Integer.Parse(value)
         ElseIf GetType(DateTime).IsAssignableFrom(type) Then
             Return DateTime.FromBinary(Long.Parse(value))
+        ElseIf GetType(Boolean).IsAssignableFrom(type) Then
+            If value = "0" Then
+                Return False
+            Else
+                Return True
+            End If
         Else
             'Unknown Object type
             Return value
@@ -238,6 +253,12 @@ Public Class SettingsFile
             Return value.ToString
         ElseIf GetType(DateTime).IsAssignableFrom(value.GetType) Then
             Return DirectCast(value, DateTime).ToBinary.ToString
+        ElseIf GetType(Boolean).IsAssignableFrom(value.GetType) Then
+            If DirectCast(value, Boolean) = True Then
+                Return "1"
+            Else
+                Return "0"
+            End If
         Else
             'Unknown Object type
             Return ""
