@@ -146,7 +146,7 @@ Public Class SettingsFile
                     Continue While
                 End If
 
-                currentCategory = line.Substring(1, li - 2) & "/"
+                currentCategory = line.Substring(1, li - 1) & "/"
             Else
                 Dim keyEndeIndex As Integer = line.IndexOf("=")
                 If keyEndeIndex = -1 Then 'ungültige zeile
