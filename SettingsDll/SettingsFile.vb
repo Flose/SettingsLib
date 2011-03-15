@@ -232,11 +232,11 @@ Public Class SettingsFile
     End Sub
 
     Private Function getValueSaveString(ByVal value As Object) As String
-        If TypeOf value Is String Then
+        If GetType(String).IsAssignableFrom(value.GetType) Then
             Return DirectCast(value, String)
-        ElseIf TypeOf value Is Integer Then
+        ElseIf GetType(Integer).IsAssignableFrom(value.GetType) Then
             Return value.ToString
-        ElseIf TypeOf value Is DateTime Then
+        ElseIf GetType(DateTime).IsAssignableFrom(value.GetType) Then
             Return DirectCast(value, DateTime).ToBinary.ToString
         Else
             'Unknown Object type
