@@ -1,16 +1,16 @@
 ﻿Imports NUnit.Framework
 Imports FloseCode.Settings
 
-<TestFixture()>
+<TestFixture()> _
 Public Class Test_File
     Dim settings As SettingsFile
 
-    <TestFixtureSetUp()>
+    <TestFixtureSetUp()> _
     Public Sub CreateClass()
         settings = New SettingsFile()
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_put_Integer()
         Dim key As String = "Test"
         Dim value As Integer = 5345
@@ -24,7 +24,7 @@ Public Class Test_File
         Assert.AreEqual(value, settings.getInteger(key))
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_put_Double()
         Dim key As String = "Tesfda1t"
         Dim value As Double = 54.1
@@ -44,7 +44,7 @@ Public Class Test_File
         Assert.AreEqual(value, settings.getDouble(key))
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_put_Boolean()
         Dim key As String = "Test"
         Dim value As Boolean = True
@@ -58,7 +58,7 @@ Public Class Test_File
         Assert.AreEqual(value, settings.getBoolean(key))
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_put_String()
         Test_put_String("fdfads534f      5" & vbTab & vbCr & "fjdsk" & vbCrLf & "fjdak" & vbLf)
         Test_put_String("jfdsalf839fjsdklafj jfaefdjsia\n\\n" & vbCr & "fjdk" & vbCrLf & "fjdk?)&" & ChrW(43438) & vbLf)
@@ -79,7 +79,7 @@ Public Class Test_File
         Assert.AreEqual(text, settings.getString(key))
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_put_DateTime()
         Dim key As String = "Test"
         Dim value As Date = New Date(477843578992835735)
@@ -93,7 +93,7 @@ Public Class Test_File
         Assert.AreEqual(value, settings.getDateTime(key))
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_put_String_Save_and_Open()
         Test_put_String_Save_and_Open("jfdsalf839fjsdklafj jfaefdjsia\n\\n" & vbCr & "fjdk" & vbCrLf & "fjdk?)&" & ChrW(43438) & vbLf)
         Test_put_String_Save_and_Open("jfdsalf839fjsdklafj jfaefdjsia\n\\n" & vbCr & "fjdk" & vbCrLf & "fjdk?)&" & ChrW(43438) & vbLf & """")
@@ -113,7 +113,7 @@ Public Class Test_File
         IO.File.Delete(temp)
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_put_Boolean_Save_and_Open()
         Test_put_Boolean_Save_and_Open(True)
         Test_put_Boolean_Save_and_Open(False)
@@ -132,7 +132,7 @@ Public Class Test_File
         IO.File.Delete(temp)
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_put_Integer_Save_and_Open()
         Dim key As String = "TestInt"
         Dim value As Integer = 5345
@@ -147,7 +147,7 @@ Public Class Test_File
         IO.File.Delete(temp)
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_put_double_Save_and_Open()
         Test_put_double_Save_and_Open(5542)
         Test_put_double_Save_and_Open(5542.4329)
@@ -170,7 +170,7 @@ Public Class Test_File
         IO.File.Delete(temp)
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_put_DateTime_Save_and_Open()
         Test_put_DateTime_Save_and_Open(New DateTime(477843578992835735))
         Test_put_DateTime_Save_and_Open(New DateTime(477843578992835735, DateTimeKind.Utc))
@@ -194,7 +194,7 @@ Public Class Test_File
         IO.File.Delete(temp)
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_correct_Key()
         Test_correct_Key("abc", "/abc")
         Test_correct_Key("//abc", "/abc")
@@ -211,7 +211,7 @@ Public Class Test_File
         Assert.AreEqual(correctKey, actual)
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_put_String_correct_Key()
         Dim key As String = "/m  ann/t==e/fjdk""""sfjdkTe///s" & vbTab & "t=D""""a  t//"
         Dim correctKey As String = "/m__ann/t__e/fjdk""""sfjdkTe/s" & vbTab & "t_D""""a__t"
@@ -229,7 +229,7 @@ Public Class Test_File
         IO.File.Delete(temp)
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_put_String_correct_Key_Open_and_Save()
         Dim key As String = "/m  ann/t==e/fjdk""""sfjdkTe///s" & vbTab & "t=D""""a  t//"
         Dim correctKey As String = "/m__ann/t__e/fjdk""""sfjdkTe/s" & vbTab & "t_D""""a__t"
@@ -251,28 +251,29 @@ Public Class Test_File
     End Sub
 End Class
 
+<TestFixture()> _
 Public Class Test_Empty_File
 
-    <Test()>
+    <Test()> _
     Public Sub Test_Open_Not_existing_File()
         Dim temp As String = "fjdfjksdfijeavösjarskdlffjaklsdfjkljsdfasdlk"
         Dim settings As New SettingsFile(temp)
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_Open_Empty_File()
         Dim temp As String = IO.Path.GetTempFileName
         Dim settings As New SettingsFile(temp)
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_Save_empty_File()
         Dim settings As New SettingsFile()
         Dim temp As String = IO.Path.GetTempFileName
         settings.save(temp)
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_Save_and_Open_empty_File()
         Dim settings As New SettingsFile()
         Dim temp As String = IO.Path.GetTempFileName
@@ -280,13 +281,13 @@ Public Class Test_Empty_File
         settings = New SettingsFile(temp)
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_Get_All_Empty()
         Dim settings As New SettingsFile()
         Assert.AreEqual(0, settings.getAll.Count)
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_Get_All_Add_One()
         Dim settings As New SettingsFile()
         Dim key As String = "jfds03/fjdskj84jl"
@@ -297,7 +298,7 @@ Public Class Test_Empty_File
         Assert.AreEqual(value, settings.getAll.Item(correctKey))
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_Get_All_Add_One_Thrice()
         Dim settings As New SettingsFile()
         Dim key As String = "jfds03/fjdskj84jl"
@@ -320,7 +321,7 @@ Public Class Test_Empty_File
         Assert.AreEqual(value2, settings.getAll.Item(correctKey))
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_Get_All_Add_Three()
         Dim settings As New SettingsFile()
         Dim key As String = "jfds03/fjdskj84jl"
@@ -345,7 +346,7 @@ Public Class Test_Empty_File
         Assert.AreEqual(value2, settings.getAll.Item(correctKey))
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_Save_and_Open_File_Change_Line_delimiter()
         'Save File
         Dim settings As New SettingsFile()
@@ -374,9 +375,9 @@ Public Class Test_Empty_File
         'with vbLf
         Dim replacedText As String = text.Replace(vbCrLf, vbLf)
         IO.File.WriteAllText(temp, replacedText)
-        Assert.False(IO.File.ReadAllText(temp).Contains(vbCrLf))
-        Assert.False(IO.File.ReadAllText(temp).Contains(vbCr))
-        Assert.True(IO.File.ReadAllText(temp).Contains(vbLf))
+        Assert.IsFalse(IO.File.ReadAllText(temp).Contains(vbCrLf))
+        Assert.IsFalse(IO.File.ReadAllText(temp).Contains(vbCr))
+        Assert.IsTrue(IO.File.ReadAllText(temp).Contains(vbLf))
 
         settings = New SettingsFile(temp)
         Assert.AreEqual(settings.getInteger(key1), val1)
@@ -386,9 +387,9 @@ Public Class Test_Empty_File
         'with vbCr
         replacedText = text.Replace(vbCrLf, vbCr)
         IO.File.WriteAllText(temp, replacedText)
-        Assert.False(IO.File.ReadAllText(temp).Contains(vbCrLf))
-        Assert.False(IO.File.ReadAllText(temp).Contains(vbLf))
-        Assert.True(IO.File.ReadAllText(temp).Contains(vbCr))
+        Assert.IsFalse(IO.File.ReadAllText(temp).Contains(vbCrLf))
+        Assert.IsFalse(IO.File.ReadAllText(temp).Contains(vbLf))
+        Assert.IsTrue(IO.File.ReadAllText(temp).Contains(vbCr))
 
         settings = New SettingsFile(temp)
         Assert.AreEqual(settings.getInteger(key1), val1)
@@ -399,7 +400,7 @@ Public Class Test_Empty_File
         IO.File.Delete(temp)
     End Sub
 
-    <Test()>
+    <Test()> _
     Public Sub Test_Get_Default_Value()
         Dim settings As New SettingsFile()
         Assert.AreEqual(settings.getString("aber", "321ge"), "321ge")
