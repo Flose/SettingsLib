@@ -251,7 +251,11 @@ Public Class SettingsFile
         For Each category As KeyValuePair(Of String, IDictionary(Of String, Object)) In settings
             Writer.WriteLine("[" & EscapeString(category.Key) & "]")
             For Each kv As KeyValuePair(Of String, Object) In category.Value
-                Writer.WriteLine(EscapeString(kv.Key) & " = " & kv.Value.GetType.ToString & """" & EscapeString(getValueSaveString(kv.Value)) & """") 'TODO schaun wie das mit unterklassen ist
+                Dim typeString As String = ""
+                If Not TypeOf kv.Value Is String Then
+                    typeString = kv.Value.GetType.ToString
+                End If
+                Writer.WriteLine(EscapeString(kv.Key) & " = " & typeString & """" & EscapeString(getValueSaveString(kv.Value)) & """") 'TODO schaun wie das mit unterklassen ist
             Next
             Writer.WriteLine()
         Next
