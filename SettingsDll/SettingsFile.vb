@@ -214,7 +214,7 @@ Public Class SettingsFile
         If GetType(String).IsAssignableFrom(type) Then
             Return value
         ElseIf GetType(Integer).IsAssignableFrom(type) Then
-            Return Integer.Parse(value)
+            Return Integer.Parse(value, Globalization.CultureInfo.InvariantCulture)
         ElseIf GetType(DateTime).IsAssignableFrom(type) Then
             Return DateTime.FromBinary(Long.Parse(value))
         ElseIf GetType(Boolean).IsAssignableFrom(type) Then
@@ -250,7 +250,7 @@ Public Class SettingsFile
         If GetType(String).IsAssignableFrom(value.GetType) Then
             Return DirectCast(value, String)
         ElseIf GetType(Integer).IsAssignableFrom(value.GetType) Then
-            Return value.ToString
+            Return DirectCast(value, Integer).ToString(System.Globalization.CultureInfo.InvariantCulture)
         ElseIf GetType(DateTime).IsAssignableFrom(value.GetType) Then
             Return DirectCast(value, DateTime).ToBinary.ToString
         ElseIf GetType(Boolean).IsAssignableFrom(value.GetType) Then
