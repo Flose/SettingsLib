@@ -25,6 +25,26 @@ Public Class Test_File
     End Sub
 
     <Test()>
+    Public Sub Test_put_Double()
+        Dim key As String = "Tesfda1t"
+        Dim value As Double = 54.1
+        settings.putDouble(key, value)
+        Assert.AreEqual(value, settings.getDouble(key))
+
+        value = 43234
+        Assert.AreNotEqual(value, settings.getDouble(key))
+
+        settings.putDouble(key, value)
+        Assert.AreEqual(value, settings.getDouble(key))
+
+        value = 43234.4738248
+        Assert.AreNotEqual(value, settings.getDouble(key))
+
+        settings.putDouble(key, value)
+        Assert.AreEqual(value, settings.getDouble(key))
+    End Sub
+
+    <Test()>
     Public Sub Test_put_Boolean()
         Dim key As String = "Test"
         Dim value As Boolean = True
@@ -124,6 +144,29 @@ Public Class Test_File
         Dim tmpSettings As New SettingsFile(temp)
 
         Assert.AreEqual(value, tmpSettings.getInteger(key))
+        IO.File.Delete(temp)
+    End Sub
+
+    <Test()>
+    Public Sub Test_put_double_Save_and_Open()
+        Test_put_double_Save_and_Open(5542)
+        Test_put_double_Save_and_Open(5542.4329)
+        Test_put_double_Save_and_Open(0.4732874)
+        Test_put_double_Save_and_Open(Double.MaxValue)
+        Test_put_double_Save_and_Open(Double.MinValue)
+        Test_put_double_Save_and_Open(Double.MaxValue / 2)
+    End Sub
+
+    Private Sub Test_put_double_Save_and_Open(ByVal Value As Double)
+        Dim key As String = "TestDoub5"
+
+        settings.putDouble(key, Value)
+        Dim temp As String = IO.Path.GetTempFileName
+        settings.save(temp)
+
+        Dim tmpSettings As New SettingsFile(temp)
+
+        Assert.AreEqual(Value, tmpSettings.getDouble(key))
         IO.File.Delete(temp)
     End Sub
 
@@ -363,6 +406,9 @@ Public Class Test_Empty_File
         Assert.AreEqual(settings.getString("aber", "54554"), "54554")
         Assert.AreEqual(settings.getInteger("aber", 4434342), 4434342)
         Assert.AreEqual(settings.getInteger("aber", 1234), 1234)
+        Assert.AreEqual(settings.getDouble("aber", 73473874.5454), 73473874.5454)
+        Assert.AreEqual(settings.getDouble("aber", Double.MaxValue), Double.MaxValue)
+        Assert.AreEqual(settings.getDouble("aber", Double.MinValue), Double.MinValue)
         Dim d As New DateTime(43477238473)
         Assert.AreEqual(settings.getDateTime("aber", d), d)
         d = New DateTime(434772434338473)

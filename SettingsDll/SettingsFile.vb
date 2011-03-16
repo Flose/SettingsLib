@@ -65,6 +65,10 @@ Public Class SettingsFile
         putValue(key, value)
     End Sub
 
+    Public Sub putDouble(ByVal key As String, ByVal value As Double)
+        putValue(key, value)
+    End Sub
+
     Public Sub putDateTime(ByVal key As String, ByVal value As DateTime)
         putValue(key, value)
     End Sub
@@ -119,6 +123,11 @@ Public Class SettingsFile
     Public Function getInteger(ByVal key As String, Optional ByVal defaultValue As Integer = 0) As Integer
         Dim val As Object = getValue(key, defaultValue, GetType(Integer))
         Return DirectCast(val, Integer)
+    End Function
+
+    Public Function getDouble(ByVal key As String, Optional ByVal defaultValue As Double = 0) As Double
+        Dim val As Object = getValue(key, defaultValue, GetType(Double))
+        Return DirectCast(val, Double)
     End Function
 
     Public Function getDateTime(ByVal key As String, Optional ByVal defaultValue As DateTime = Nothing) As DateTime
@@ -215,6 +224,8 @@ Public Class SettingsFile
             Return value
         ElseIf GetType(Integer).IsAssignableFrom(type) Then
             Return Integer.Parse(value, Globalization.CultureInfo.InvariantCulture)
+        ElseIf GetType(Double).IsAssignableFrom(type) Then
+            Return Double.Parse(value, Globalization.CultureInfo.InvariantCulture)
         ElseIf GetType(DateTime).IsAssignableFrom(type) Then
             Return DateTime.FromBinary(Long.Parse(value))
         ElseIf GetType(Boolean).IsAssignableFrom(type) Then
@@ -251,6 +262,8 @@ Public Class SettingsFile
             Return DirectCast(value, String)
         ElseIf GetType(Integer).IsAssignableFrom(value.GetType) Then
             Return DirectCast(value, Integer).ToString(System.Globalization.CultureInfo.InvariantCulture)
+        ElseIf GetType(Double).IsAssignableFrom(value.GetType) Then
+            Return DirectCast(value, Double).ToString("R", Globalization.CultureInfo.InvariantCulture)
         ElseIf GetType(DateTime).IsAssignableFrom(value.GetType) Then
             Return DirectCast(value, DateTime).ToBinary.ToString
         ElseIf GetType(Boolean).IsAssignableFrom(value.GetType) Then
