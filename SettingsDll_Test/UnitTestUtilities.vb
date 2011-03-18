@@ -3,7 +3,7 @@
 Public Class UnitTestUtilities
 
     Public Shared Function RunInstanceMethod(ByVal Method As String, ByVal Instance As Object, ByVal ParamArray params() As Object) As Object
-        Dim eFlags As BindingFlags = BindingFlags.Instance Or BindingFlags.Public Or BindingFlags.NonPublic
+        Dim eFlags As BindingFlags = BindingFlags.Instance Or BindingFlags.Public Or BindingFlags.NonPublic Or BindingFlags.Static
         Return RunMethod(Method, Instance, eFlags, params)
     End Function
 

@@ -1,10 +1,13 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FloseCode.Settings
+﻿namespace FloseCode.Settings
 {
+	using System;
+	using System.Collections.Generic;
+	using System.IO;
+	using System.Text;
+
+	/// <summary>
+	/// This class implements an easy to use settings storage
+	/// </summary>
 	public class SettingsFile
 	{
 		readonly IDictionary<string, IDictionary<string, object>> settings;
@@ -32,7 +35,7 @@ namespace FloseCode.Settings
 		/// Converts a given key to a correct key by following these rules:
 		/// - a key must begin with '/'
 		/// - a key doesn't end with '/'
-		/// - not two '/' after each otehr
+		/// - not two '/' after each other
 		/// - ' ', '[', ']' and '=' are converted to '_'
 		/// </summary>
 		/// <param name="key">
@@ -41,9 +44,9 @@ namespace FloseCode.Settings
 		/// <returns>
 		/// A correct SettingsFile key, as a <see cref="System.String"/>
 		/// </returns>
-		string correctKey(string key)
+		static string correctKey(string key)
 		{
-			if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(key.Replace("/", "")))
+			if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(key.Replace("/", string.Empty)))
 				throw new SettingsFileException("Key must not be empty");
 
 			StringBuilder sb = new StringBuilder(key.Length);
@@ -60,7 +63,7 @@ namespace FloseCode.Settings
 				} else {
 					sb.Append("_");
 				}
-				previousWasSlash = (c == '/');
+				previousWasSlash = c == '/';
 			}
 			if (sb[sb.Length - 1] == '/')
 				sb.Remove(sb.Length - 1, 1);
@@ -272,7 +275,7 @@ namespace FloseCode.Settings
 			}
 		}
 
-		void writeErrorToConsole(string message)
+		static void writeErrorToConsole(string message)
 		{
 			Console.Error.WriteLine("SettingsFile: " + message);
 		}
@@ -322,7 +325,7 @@ namespace FloseCode.Settings
 			}
 		}
 
-		string getValueSaveString(object value)
+		static string getValueSaveString(object value)
 		{
 			if (typeof(string).IsAssignableFrom(value.GetType())) {
 				return (string)value;
@@ -377,21 +380,6 @@ namespace FloseCode.Settings
 				escaping = false;
 			}
 			return sb.ToString();
-		}
-	}
-
-	public class SettingsFileException : System.Exception
-	{
-		public SettingsFileException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context)
-		{
-		}
-
-		public SettingsFileException(string message) : base(message)
-		{
-		}
-
-		public SettingsFileException(string message, Exception innerException) : base(message, innerException)
-		{
 		}
 	}
 }
