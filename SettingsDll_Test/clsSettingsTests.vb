@@ -31,6 +31,29 @@ Public Class Test_File
     End Sub
 
     <Test()> _
+    Public Sub Test_Get_Wrong_Type()
+        Dim key As String = "fjda/jklfdj92432/&$§)jkfd/fdjk"
+        Dim value As Integer = 5345
+
+        Assert.DoesNotThrow(Sub() settings.getInteger(key))
+        Assert.DoesNotThrow(Sub() settings.getString(key))
+        Assert.DoesNotThrow(Sub() settings.getBoolean(key))
+
+        settings.putInteger(key, value)
+
+        Dim errorMsg As String
+        Assert.DoesNotThrow(Sub() settings.getInteger(key))
+        errorMsg = "Tried to read """ & key & """ as ""String"", but it's a """ & value.GetType().ToString() + """"
+        Assert.Throws(Of SettingsFileException)(Sub() settings.getString(key), errorMsg)
+        errorMsg = "Tried to read """ & key & """ as ""Boolean"", but it's a """ & value.GetType().ToString() + """"
+        Assert.Throws(Of SettingsFileException)(Sub() settings.getBoolean(key), errorMsg)
+        errorMsg = "Tried to read """ & key & """ as ""Double"", but it's a """ & value.GetType().ToString() + """"
+        Assert.Throws(Of SettingsFileException)(Sub() settings.getDouble(key), errorMsg)
+        errorMsg = "Tried to read """ & key & """ as ""DateTime"", but it's a """ & value.GetType().ToString() + """"
+        Assert.Throws(Of SettingsFileException)(Sub() settings.getDateTime(key), errorMsg)
+    End Sub
+
+    <Test()> _
     Public Sub Test_put_Integer()
         Dim key As String = "ta/te/Test"
         Dim value As Integer = 5345
@@ -437,7 +460,7 @@ Public Class Test_Empty_File
         Dim settings As New SettingsFile()
         Assert.AreEqual(settings.getString("aber"), "")
         Assert.AreEqual(settings.getInteger("aber"), 0)
-        Assert.AreEqual(settings.getDateTime("aber"), new DateTime(0))
+        Assert.AreEqual(settings.getDateTime("aber"), New DateTime(0))
         Assert.AreEqual(settings.getDouble("aber"), 0)
         Assert.AreEqual(settings.getBoolean("aber"), False)
 
@@ -454,5 +477,18 @@ Public Class Test_Empty_File
         Assert.AreEqual(settings.getDateTime("aber", d), d)
         Assert.AreEqual(settings.getBoolean("aber", True), True)
         Assert.AreEqual(settings.getBoolean("aber", False), False)
+    End Sub
+
+    <Test()> _
+    Public Sub Test_Get_Non_Existing_Category()
+        Dim settings As New SettingsFile()
+        Dim keyCategory As String = "/fjda/jklfdj92432/&$§)jkfd/"
+        Dim keyName As String = "fdjk"
+
+        Assert.AreEqual(1234, settings.getInteger(keyCategory & keyName, 1234))
+        settings.putBoolean(keyCategory & "testE", True)
+        Assert.AreEqual(1234, settings.getInteger(keyCategory & keyName, 1234))
+        settings.putInteger(keyCategory & keyName, 4321)
+        Assert.AreNotEqual(1234, settings.getInteger(keyCategory & keyName, 1234))
     End Sub
 End Class
