@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Text;
 
@@ -34,7 +35,7 @@ namespace FloseCode.Settings
 			if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(key.Replace("/", "")))
 				throw new SettingsFileException("Key must not be empty");
 
-			System.Text.StringBuilder sb = new System.Text.StringBuilder(key.Length);
+			StringBuilder sb = new StringBuilder(key.Length);
 			if (key [0] != '/')
 				sb.Append('/');
 
@@ -179,16 +180,190 @@ namespace FloseCode.Settings
 			return (bool)val;
 		}
 
-		private void open(string file)
+		private void open(string fileName)
 		{
+			settings.Clear();
+			if (!File.Exists(fileName))
+				return;
 
-
+			using (StreamReader reader = new StreamReader(fileName, Encoding.UTF8, true)) {
+				open(reader);
+			}
 		}
 		
-		public void save(string file)
+		private void open(StreamReader reader) 
 		{
-
-
+			string currentCategory = "/";
+			while (!reader.EndOfStream) {
+				string line = reader.ReadLine().TrimStart(' ');
+				if (string.IsNullOrEmpty(line)) // Leerzeile
+					continue;
+				if (line[0] == ';') // Kommentarzeile
+					continue;
+				
+				if (line[0] == '[') {
+					// Category
+					int li = line.LastIndexOf(']');
+					if (li == -1) {
+						writeErrorToConsole("Error while opening: Missing ] at the end");
+						writeErrorToConsole("=> Ignoring line: " + line);
+						continue;
+					}
+					
+					currentCategory = line.Substring(1, li - 1) + '/';
+				} else {
+					//Value
+					int keyEndeIndex = line.IndexOf('=');
+					if (keyEndeIndex == -1) {
+						writeErrorToConsole("Error while opening: Missing = after KeyName");
+						writeErrorToConsole("=> Ignoring line: " + line);
+						continue;
+					}
+					
+					string key = line.Substring(0, keyEndeIndex - 1).TrimEnd(' ');
+					
+					int valAnfangIndex = line.IndexOf('"', keyEndeIndex);
+					if (valAnfangIndex == -1) { // ungültige Zeile
+						writeErrorToConsole("Error while opening key \"" + key + "\": Missing \" after =");
+						writeErrorToConsole("=> Ignoring line: " + line);
+						continue;
+					}
+					
+					Type valueType;
+					try {
+						string typeString = line.Substring(keyEndeIndex + 1, valAnfangIndex - keyEndeIndex - 1).Trim();
+						valueType = System.Type.GetType(typeString); // Bei ungültigem Typ ist valueType null, und Typ string wird angenommen
+					} catch (Exception ex) {
+						writeErrorToConsole("Error while opening key \"" + key + "\": " + ex.Message);
+						writeErrorToConsole("=> Ignoring line: " + line);
+						continue;
+					}
+					
+					int valEndeIndex = line.LastIndexOf('"');
+					if (valEndeIndex == -1 || valEndeIndex <= valAnfangIndex) {
+						writeErrorToConsole("Error while opening key \"" + key + "\": Missing \" at the end");
+						writeErrorToConsole("=> Ignoring line: " + line);
+						continue;
+					}
+					
+					string valueString = unEscapeString(line.Substring(valAnfangIndex + 1, valEndeIndex - valAnfangIndex - 1).Trim());
+					object val;
+					try {
+						val = getValueFromSaveString(valueString, valueType);
+					} catch (Exception ex) {
+						writeErrorToConsole("Error while opening key \"" + key + "\": " + ex.Message);
+						writeErrorToConsole("=> Ignoring line: " + line);
+						continue;
+					}
+					
+					putValue(currentCategory + key, val);
+				}
+			}
+		}
+		
+		private void writeErrorToConsole(string message)
+		{
+			Console.Error.WriteLine("SettingsFile: " + message);
+		}
+		
+		private static object getValueFromSaveString(string value, Type type) 
+		{
+			if (typeof(string).IsAssignableFrom(type)) {
+				return value;
+			} else if (typeof(int).IsAssignableFrom(type)) {
+				return int.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
+			} else if (typeof(double).IsAssignableFrom(type)) {
+				return double.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
+			} else if (typeof(DateTime).IsAssignableFrom(type)) {
+				return DateTime.FromBinary(long.Parse(value, System.Globalization.CultureInfo.InvariantCulture));
+			} else if (typeof(bool).IsAssignableFrom(type)) {
+				if (value == "0") {
+					return false;
+				} else {
+					return true;
+				}
+			} else {
+				// Unknown object type
+				return value;
+			}
+		}
+		
+		public void save(string fileName)
+		{
+			using (StreamWriter writer = new StreamWriter(fileName, false, Encoding.UTF8)) {
+				writer.NewLine = "\r\n";
+				save(writer);
+			}
+		}
+		
+		private void save(StreamWriter writer) 
+		{
+			foreach (KeyValuePair<string, IDictionary<string, object>> category in settings) {
+				writer.WriteLine("[" + escapeString(category.Key) + "]");
+				foreach (KeyValuePair<string, object> kv in category.Value) {
+					string typeString = "";
+					if (!(kv.Value.GetType() == typeof(string))) {
+						typeString = kv.Value.GetType().ToString();
+					}
+					writer.WriteLine(escapeString(kv.Key) + " = " + typeString + "\"" + escapeString(getValueSaveString(kv.Value)) + "\"");
+				}
+			}
+		}
+		
+		private string getValueSaveString(object value) {
+			if (typeof(string).IsAssignableFrom(value.GetType())) {
+				return (string)value;
+			} else if (typeof(int).IsAssignableFrom(value.GetType())) {
+				return ((int)value).ToString(System.Globalization.CultureInfo.InvariantCulture);
+			} else if (typeof(double).IsAssignableFrom(value.GetType())) {
+				return ((double)value).ToString("R", System.Globalization.CultureInfo.InvariantCulture);
+			} else if (typeof(DateTime).IsAssignableFrom(value.GetType())) {
+				return ((DateTime)value).ToBinary().ToString(System.Globalization.CultureInfo.InvariantCulture);
+			} else if (typeof(bool).IsAssignableFrom(value.GetType())) {
+				if ((bool)value == true) {
+					return "1";
+				} else {
+					return "0";
+				}
+			} else {
+				// Unknown object type
+				return string.Empty;
+			}
+		}
+		
+		private static string escapeString(string text)
+		{
+			return text.Replace("\\", "\\\\").Replace("\n", "\\n").Replace("\r", "\\r");
+		}
+		
+		private static string unEscapeString(string text) 
+		{
+			StringBuilder sb = new StringBuilder(text.Length);
+			bool escaping = false;
+			foreach (char c in text) {
+				if (!escaping && c == '\\') {
+					escaping = true;
+					continue;
+				}
+				if (!escaping) {
+					sb.Append(c);
+					continue;
+				}
+				
+				switch (c) {
+				case 'n': 
+					sb.Append('\n');
+					break;
+				case 'r': 
+					sb.Append('\r');
+					break;
+				default: 
+					sb.Append(c);
+					break;
+				}
+				escaping = false;
+			}
+			return sb.ToString();
 		}
 	}
 
