@@ -8,11 +8,21 @@ namespace FloseCode.Settings
 	public class SettingsFile
 	{
 		readonly IDictionary<string, IDictionary<string, object>> settings;
+
+		/// <summary>
+		/// Initializes a new empty instance of the <see cref="FloseCode.Settings.SettingsFile"/> class.
+		/// </summary>
 		public SettingsFile()
 		{
 			settings = new Dictionary<string, IDictionary<string, object>>();
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FloseCode.Settings.SettingsFile"/> class and loads settings from file.
+		/// </summary>
+		/// <param name='file'>
+		/// The Settings file that will be opened.
+		/// </param>
 		public SettingsFile(string file) : this()
 		{
 			open(file);
@@ -22,11 +32,14 @@ namespace FloseCode.Settings
 		/// Converts a given key to a correct key by following these rules:
 		/// - a key must begin with '/'
 		/// - a key doesn't end with '/'
+		/// - not two '/' after each otehr
+		/// - ' ', '[', ']' and '=' are converted to '_'
 		/// </summary>
 		/// <param name="key">
-		/// A <see cref="System.String"/>
+		/// A <see cref="System.String"/> that will be converted to a correct SettingsFile key
+		/// </param>
 		/// <returns>
-		/// A <see cref="System.String"/>
+		/// A correct SettingsFile key, as a <see cref="System.String"/>
 		/// </returns>
 		string correctKey(string key)
 		{
@@ -368,7 +381,6 @@ namespace FloseCode.Settings
 
 	public class SettingsFileException : System.Exception
 	{
-
 		public SettingsFileException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context)
 		{
 		}
