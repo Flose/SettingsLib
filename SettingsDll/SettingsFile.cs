@@ -318,6 +318,7 @@ namespace FloseCode.Settings
 					}
 					writer.WriteLine(escapeString(kv.Key) + " = " + typeString + "\"" + escapeString(getValueSaveString(kv.Value)) + "\"");
 				}
+				writer.WriteLine();
 			}
 		}
 
