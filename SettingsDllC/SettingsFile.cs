@@ -34,7 +34,7 @@ namespace FloseCode.Settings
 				throw new SettingsFileException("Key must not be empty");
 
 			StringBuilder sb = new StringBuilder(key.Length);
-			if (key [0] != '/')
+			if (key[0] != '/')
 				sb.Append('/');
 
 			bool previousWasSlash = false;
@@ -49,13 +49,13 @@ namespace FloseCode.Settings
 				}
 				previousWasSlash = (c == '/');
 			}
-			if (sb [sb.Length - 1] == '/')
+			if (sb[sb.Length - 1] == '/')
 				sb.Remove(sb.Length - 1, 1);
 
 			return sb.ToString();
 		}
 
-		void putValue(string key,object value)
+		void putValue(string key, object value)
 		{
 			if (key == null)
 				return;
@@ -67,14 +67,14 @@ namespace FloseCode.Settings
 
 			IDictionary<string, object> categoryPair;
 			if (settings.ContainsKey(category)) {
-				categoryPair = settings [category];
+				categoryPair = settings[category];
 			} else {
 				categoryPair = new Dictionary<string, object>();
 				settings.Add(category, categoryPair);
 			}
 
 			if (categoryPair.ContainsKey(name)) {
-				categoryPair [name] = value;
+				categoryPair[name] = value;
 			} else {
 				categoryPair.Add(name, value);
 			}
@@ -130,14 +130,14 @@ namespace FloseCode.Settings
 
 			IDictionary<string, object> categoryPair;
 			if (settings.ContainsKey(category)) {
-				categoryPair = settings [category];
+				categoryPair = settings[category];
 			} else {
 				return defaultValue;
 			}
 
 			object val;
 			if (categoryPair.ContainsKey(name)) {
-				val = categoryPair [name];
+				val = categoryPair[name];
 			} else {
 				return defaultValue;
 			}
@@ -171,7 +171,7 @@ namespace FloseCode.Settings
 			object val = getValue(key, defaultValue, typeof(DateTime));
 			return (DateTime)val;
 		}
-		
+
 		public bool getBoolean(string key, bool defaultValue = false)
 		{
 			object val = getValue(key, defaultValue, typeof(bool));
@@ -188,8 +188,8 @@ namespace FloseCode.Settings
 				open(reader);
 			}
 		}
-		
-		void open(StreamReader reader) 
+
+		void open(StreamReader reader)
 		{
 			string currentCategory = "/";
 			while (!reader.EndOfStream) {
@@ -198,7 +198,7 @@ namespace FloseCode.Settings
 					continue;
 				if (line[0] == ';') // Kommentarzeile
 					continue;
-				
+
 				if (line[0] == '[') {
 					// Category
 					int li = line.LastIndexOf(']');
@@ -207,7 +207,7 @@ namespace FloseCode.Settings
 						writeErrorToConsole("=> Ignoring line: " + line);
 						continue;
 					}
-					
+
 					currentCategory = line.Substring(1, li - 1) + '/';
 				} else {
 					//Value
@@ -217,16 +217,16 @@ namespace FloseCode.Settings
 						writeErrorToConsole("=> Ignoring line: " + line);
 						continue;
 					}
-					
+
 					string key = line.Substring(0, keyEndeIndex - 1).TrimEnd(' ');
-					
+
 					int valAnfangIndex = line.IndexOf('"', keyEndeIndex);
 					if (valAnfangIndex == -1) { // ungültige Zeile
 						writeErrorToConsole("Error while opening key \"" + key + "\": Missing \" after =");
 						writeErrorToConsole("=> Ignoring line: " + line);
 						continue;
 					}
-					
+
 					Type valueType;
 					try {
 						string typeString = line.Substring(keyEndeIndex + 1, valAnfangIndex - keyEndeIndex - 1).Trim();
@@ -236,14 +236,14 @@ namespace FloseCode.Settings
 						writeErrorToConsole("=> Ignoring line: " + line);
 						continue;
 					}
-					
+
 					int valEndeIndex = line.LastIndexOf('"');
 					if (valEndeIndex == -1 || valEndeIndex <= valAnfangIndex) {
 						writeErrorToConsole("Error while opening key \"" + key + "\": Missing \" at the end");
 						writeErrorToConsole("=> Ignoring line: " + line);
 						continue;
 					}
-					
+
 					string valueString = unEscapeString(line.Substring(valAnfangIndex + 1, valEndeIndex - valAnfangIndex - 1).Trim());
 					object val;
 					try {
@@ -253,18 +253,18 @@ namespace FloseCode.Settings
 						writeErrorToConsole("=> Ignoring line: " + line);
 						continue;
 					}
-					
+
 					putValue(currentCategory + key, val);
 				}
 			}
 		}
-		
+
 		void writeErrorToConsole(string message)
 		{
 			Console.Error.WriteLine("SettingsFile: " + message);
 		}
-		
-		static object getValueFromSaveString(string value, Type type) 
+
+		static object getValueFromSaveString(string value, Type type)
 		{
 			if (typeof(string).IsAssignableFrom(type)) {
 				return value;
@@ -285,7 +285,7 @@ namespace FloseCode.Settings
 				return value;
 			}
 		}
-		
+
 		public void save(string fileName)
 		{
 			using (StreamWriter writer = new StreamWriter(fileName, false, Encoding.UTF8)) {
@@ -293,8 +293,8 @@ namespace FloseCode.Settings
 				save(writer);
 			}
 		}
-		
-		void save(StreamWriter writer) 
+
+		void save(StreamWriter writer)
 		{
 			foreach (KeyValuePair<string, IDictionary<string, object>> category in settings) {
 				writer.WriteLine("[" + escapeString(category.Key) + "]");
@@ -307,8 +307,9 @@ namespace FloseCode.Settings
 				}
 			}
 		}
-		
-		string getValueSaveString(object value) {
+
+		string getValueSaveString(object value)
+		{
 			if (typeof(string).IsAssignableFrom(value.GetType())) {
 				return (string)value;
 			} else if (typeof(int).IsAssignableFrom(value.GetType())) {
@@ -328,13 +329,13 @@ namespace FloseCode.Settings
 				return string.Empty;
 			}
 		}
-		
+
 		static string escapeString(string text)
 		{
 			return text.Replace("\\", "\\\\").Replace("\n", "\\n").Replace("\r", "\\r");
 		}
-		
-		static string unEscapeString(string text) 
+
+		static string unEscapeString(string text)
 		{
 			StringBuilder sb = new StringBuilder(text.Length);
 			bool escaping = false;
@@ -347,15 +348,15 @@ namespace FloseCode.Settings
 					sb.Append(c);
 					continue;
 				}
-				
+
 				switch (c) {
-				case 'n': 
+				case 'n':
 					sb.Append('\n');
 					break;
-				case 'r': 
+				case 'r':
 					sb.Append('\r');
 					break;
-				default: 
+				default:
 					sb.Append(c);
 					break;
 				}
