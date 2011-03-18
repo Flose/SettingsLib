@@ -32,7 +32,7 @@ Public Class Test_File
 
     <Test()> _
     Public Sub Test_put_Integer()
-        Dim key As String = "Test"
+        Dim key As String = "ta/te/Test"
         Dim value As Integer = 5345
         settings.putInteger(key, value)
         Assert.AreEqual(value, settings.getInteger(key))
@@ -46,7 +46,7 @@ Public Class Test_File
 
     <Test()> _
     Public Sub Test_put_Double()
-        Dim key As String = "Tesfda1t"
+        Dim key As String = "//fd/fd/Tesfda1t"
         Dim value As Double = 54.1
         settings.putDouble(key, value)
         Assert.AreEqual(value, settings.getDouble(key))
@@ -66,7 +66,7 @@ Public Class Test_File
 
     <Test()> _
     Public Sub Test_put_Boolean()
-        Dim key As String = "Test"
+        Dim key As String = "/43/Test"
         Dim value As Boolean = True
         settings.putBoolean(key, value)
         Assert.AreEqual(value, settings.getBoolean(key))
@@ -87,7 +87,7 @@ Public Class Test_File
     End Sub
 
     Private Sub test_put_string(ByVal text As String)
-        Dim key As String = "Test"
+        Dim key As String = "/Test"
 
         settings.putString(key, text)
         Assert.AreEqual(text, settings.getString(key))
@@ -101,7 +101,7 @@ Public Class Test_File
 
     <Test()> _
     Public Sub Test_put_DateTime()
-        Dim key As String = "Test"
+        Dim key As String = "/ta/Test"
         Dim value As Date = New Date(477843578992835735)
         settings.putDateTime(key, value)
         Assert.AreEqual(value, settings.getDateTime(key))
@@ -121,7 +121,7 @@ Public Class Test_File
     End Sub
 
     Private Sub test_put_string_save_and_open(ByVal text As String)
-        Dim key As String = "TestSt"
+        Dim key As String = "/!""§$%&/()=?`/TestSt"
 
         settings.putString(key, text)
         Dim temp As String = IO.Path.GetTempFileName
@@ -140,7 +140,7 @@ Public Class Test_File
     End Sub
 
     Private Sub test_put_Boolean_save_and_open(ByVal val As Boolean)
-        Dim key As String = "TestSt"
+        Dim key As String = "/f/TestSt"
 
         settings.putBoolean(key, val)
         Dim temp As String = IO.Path.GetTempFileName
@@ -154,7 +154,7 @@ Public Class Test_File
 
     <Test()> _
     Public Sub Test_put_Integer_Save_and_Open()
-        Dim key As String = "TestInt"
+        Dim key As String = "//TestInt"
         Dim value As Integer = 5345
 
         settings.putInteger(key, value)
@@ -178,7 +178,7 @@ Public Class Test_File
     End Sub
 
     Private Sub Test_put_double_Save_and_Open(ByVal Value As Double)
-        Dim key As String = "TestDoub5"
+        Dim key As String = "////TestDoub5"
 
         settings.putDouble(key, Value)
         Dim temp As String = IO.Path.GetTempFileName
@@ -202,7 +202,7 @@ Public Class Test_File
     End Sub
 
     Public Sub Test_put_DateTime_Save_and_Open(ByVal datum As DateTime)
-        Dim key As String = "TestDat"
+        Dim key As String = "2/TestDat"
 
         settings.putDateTime(key, datum)
         Dim temp As String = IO.Path.GetTempFileName
@@ -224,6 +224,7 @@ Public Class Test_File
         Test_correct_Key("//a///bc", "/a/bc")
         Test_correct_Key("=abc", "/_abc")
         Test_correct_Key("/m  ann/t==e/fjdk""""sfjdkTe///s" & vbTab & "t=D""""a  t//", "/m__ann/t__e/fjdk""""sfjdkTe/s" & vbTab & "t_D""""a__t")
+        Test_correct_Key("/m__ann/t__e/fjdk""""sfjdkTe/s" & vbTab & "t_D""""a__t", "/m__ann/t__e/fjdk""""sfjdkTe/s" & vbTab & "t_D""""a__t")
         Dim errorMsg As String = "Key must not be empty"
         Assert.Throws(Of SettingsFileException)(Sub() Test_correct_Key("", "/"), errorMsg)
         Assert.Throws(Of SettingsFileException)(Sub() Test_correct_Key("/", "/"), errorMsg)
