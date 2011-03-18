@@ -434,6 +434,12 @@ Public Class Test_Empty_File
     <Test()> _
     Public Sub Test_Get_Default_Value()
         Dim settings As New SettingsFile()
+        Assert.AreEqual(settings.getString("aber"), "")
+        Assert.AreEqual(settings.getInteger("aber"), 0)
+        Assert.AreEqual(settings.getDateTime("aber"), new DateTime(0))
+        Assert.AreEqual(settings.getDouble("aber"), 0)
+        Assert.AreEqual(settings.getBoolean("aber"), False)
+
         Assert.AreEqual(settings.getString("aber", "321ge"), "321ge")
         Assert.AreEqual(settings.getString("aber", "54554"), "54554")
         Assert.AreEqual(settings.getInteger("aber", 4434342), 4434342)
