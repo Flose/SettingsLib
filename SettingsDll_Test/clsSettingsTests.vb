@@ -11,6 +11,26 @@ Public Class Test_File
     End Sub
 
     <Test()> _
+    Public Sub Test_put_Empty_Key()
+        Dim key As String = ""
+        Dim correctKey As String = "/"
+        Dim value As Integer = 5345
+        Dim errorMsg As String = "Key must not be empty"
+
+        Assert.Throws(Of SettingsFileException)(Sub() settings.putInteger(key, value), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() settings.getInteger(key), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() settings.getInteger(correctKey, value), errorMsg)
+
+        value = 43234
+        Assert.Throws(Of SettingsFileException)(Sub() settings.getInteger(key), errorMsg)
+
+        value = 4343333
+        Assert.Throws(Of SettingsFileException)(Sub() settings.putInteger(correctKey, value), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() settings.getInteger(correctKey), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() settings.getInteger(key), errorMsg)
+    End Sub
+
+    <Test()> _
     Public Sub Test_put_Integer()
         Dim key As String = "Test"
         Dim value As Integer = 5345
@@ -196,19 +216,30 @@ Public Class Test_File
 
     <Test()> _
     Public Sub Test_correct_Key()
+        Test_correct_Key("/ ", "/_")
+        Test_correct_Key(" / ", "/_/_")
+        Test_correct_Key("//// ", "/_")
         Test_correct_Key("abc", "/abc")
         Test_correct_Key("//abc", "/abc")
         Test_correct_Key("//a///bc", "/a/bc")
         Test_correct_Key("=abc", "/_abc")
         Test_correct_Key("/m  ann/t==e/fjdk""""sfjdkTe///s" & vbTab & "t=D""""a  t//", "/m__ann/t__e/fjdk""""sfjdkTe/s" & vbTab & "t_D""""a__t")
+        Dim errorMsg As String = "Key must not be empty"
+        Assert.Throws(Of SettingsFileException)(Sub() Test_correct_Key("", "/"), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() Test_correct_Key("/", "/"), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() Test_correct_Key("//////", "/"), errorMsg)
     End Sub
 
     Private Sub Test_correct_Key(ByVal key As String, ByVal correctKey As String)
-        Dim actual As String = DirectCast(UnitTestUtilities.RunInstanceMethod("correctKey", settings, New String() {key}), String)
-        Assert.AreEqual(correctKey, actual)
+        Try
+            Dim actual As String = DirectCast(UnitTestUtilities.RunInstanceMethod("correctKey", settings, New String() {key}), String)
+            Assert.AreEqual(correctKey, actual)
 
-        actual = DirectCast(UnitTestUtilities.RunInstanceMethod("correctKey", settings, New String() {correctKey}), String)
-        Assert.AreEqual(correctKey, actual)
+            actual = DirectCast(UnitTestUtilities.RunInstanceMethod("correctKey", settings, New String() {correctKey}), String)
+            Assert.AreEqual(correctKey, actual)
+        Catch ex As System.Reflection.TargetInvocationException
+            Throw ex.InnerException
+        End Try
     End Sub
 
     <Test()> _

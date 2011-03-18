@@ -16,7 +16,7 @@ Public Class SettingsFile
     End Sub
 
     Private Function correctKey(ByVal key As String) As String
-        If String.IsNullOrEmpty(key) Then Return "/"
+        If String.IsNullOrEmpty(key) OrElse String.IsNullOrEmpty(key.Replace("/"c, "")) Then Throw New SettingsFileException("Key must not be empty")
 
         Dim sb As New Text.StringBuilder(key.Length)
         If key.Chars(0) <> "/" Then sb.Append("/"c)
