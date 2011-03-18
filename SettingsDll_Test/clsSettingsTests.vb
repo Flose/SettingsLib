@@ -243,7 +243,7 @@ Public Class Test_File
     End Sub
 
     <Test()> _
-    Public Sub Test_put_String_correct_Key()
+    Public Sub Test_put_String_correct_Key_Open_and_Save()
         Dim key As String = "/m  ann/t==e/fjdk""""sfjdkTe///s" & vbTab & "t=D""""a  t//"
         Dim correctKey As String = "/m__ann/t__e/fjdk""""sfjdkTe/s" & vbTab & "t_D""""a__t"
 
@@ -261,7 +261,7 @@ Public Class Test_File
     End Sub
 
     <Test()> _
-    Public Sub Test_put_String_correct_Key_Open_and_Save()
+    Public Sub Test_put_String_correct_Key()
         Dim key As String = "/m  ann/t==e/fjdk""""sfjdkTe///s" & vbTab & "t=D""""a  t//"
         Dim correctKey As String = "/m__ann/t__e/fjdk""""sfjdkTe/s" & vbTab & "t_D""""a__t"
 
