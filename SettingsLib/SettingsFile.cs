@@ -1,4 +1,4 @@
-﻿namespace FloseCode.Settings
+﻿namespace FloseCode.SettingsLib
 {
 	using System;
 	using System.Collections.Generic;

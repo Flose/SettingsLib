@@ -92,9 +92,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SettingsDll\SettingsDll.csproj">
+    <ProjectReference Include="..\SettingsLib\SettingsLib.csproj">
       <Project>{DD2E2642-E707-443F-8BD8-1CE6FE2F79F4}</Project>
-      <Name>SettingsDll</Name>
+      <Name>SettingsLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

@@ -1,4 +1,4 @@
-﻿Imports FloseCode.Settings
+﻿Imports FloseCode.SettingsLib
 Imports NUnit.Framework
 
 <TestFixture()> _

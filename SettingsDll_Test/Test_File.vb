@@ -1,5 +1,5 @@
 ﻿Imports NUnit.Framework
-Imports FloseCode.Settings
+Imports FloseCode.SettingsLib
 
 <TestFixture()> _
 Public Class Test_File

@@ -8,8 +8,8 @@
     <ProjectGuid>{DD2E2642-E707-443F-8BD8-1CE6FE2F79F4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FloseCode.Settings</RootNamespace>
-    <AssemblyName>SettingsDll</AssemblyName>
+    <RootNamespace>FloseCode.SettingsLib</RootNamespace>
+    <AssemblyName>SettingsLib</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
