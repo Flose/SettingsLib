@@ -28,7 +28,7 @@
 		/// </param>
 		public SettingsFile(string file) : this()
 		{
-			open(file);
+			Open(file);
 		}
 
 		/// <summary>
@@ -44,7 +44,7 @@
 		/// <returns>
 		/// A correct SettingsFile key, as a <see cref="System.String"/>
 		/// </returns>
-		static string correctKey(string key)
+		static string CorrectKey(string key)
 		{
 			if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(key.Replace("/", string.Empty)))
 				throw new SettingsFileException("Key must not be empty");
@@ -71,12 +71,12 @@
 			return sb.ToString();
 		}
 
-		void putValue(string key, object value)
+		void PutValue(string key, object value)
 		{
 			if (key == null)
 				return;
 
-			key = correctKey(key);
+			key = CorrectKey(key);
 			int li = key.LastIndexOf('/');
 			string category = key.Substring(0, li + 1);
 			string name = key.Substring(li + 1);
@@ -96,32 +96,32 @@
 			}
 		}
 
-		public void putString(string key, string value)
+		public void PutString(string key, string value)
 		{
-			putValue(key, value);
+			PutValue(key, value);
 		}
 
-		public void putInteger(string key, int value)
+		public void PutInteger(string key, int value)
 		{
-			putValue(key, value);
+			PutValue(key, value);
 		}
 
-		public void putDouble(string key, double value)
+		public void PutDouble(string key, double value)
 		{
-			putValue(key, value);
+			PutValue(key, value);
 		}
 
-		public void putDateTime(string key, DateTime value)
+		public void PutDateTime(string key, DateTime value)
 		{
-			putValue(key, value);
+			PutValue(key, value);
 		}
 
-		public void putBoolean(string key, bool value)
+		public void PutBoolean(string key, bool value)
 		{
-			putValue(key, value);
+			PutValue(key, value);
 		}
 
-		public IDictionary<string, object> getAll()
+		public IDictionary<string, object> GetAll()
 		{
 			string currectCategory;
 			IDictionary<string, object> tmpList = new Dictionary<string, object>();
@@ -134,12 +134,12 @@
 			return tmpList;
 		}
 
-		object getValue(string key, object defaultValue, Type type)
+		object GetValue(string key, object defaultValue, Type type)
 		{
 			if (type == null)
 				return null;
 
-			key = correctKey(key);
+			key = CorrectKey(key);
 			int li = key.LastIndexOf('/');
 			string category = key.Substring(0, li + 1);
 			string name = key.Substring(li + 1);
@@ -164,48 +164,48 @@
 			throw new SettingsFileException("Tried to read \"" + key + "\" as \"" + type.ToString() + "\", but it's a \"" + val.GetType().ToString() + "\"");
 		}
 
-		public string getString(string key, string defaultValue = "")
+		public string GetString(string key, string defaultValue = "")
 		{
-			object val = getValue(key, defaultValue, typeof(string));
+			object val = GetValue(key, defaultValue, typeof(string));
 			return (string)val;
 		}
 
-		public int getInteger(string key, int defaultValue = 0)
+		public int GetInteger(string key, int defaultValue = 0)
 		{
-			object val = getValue(key, defaultValue, typeof(int));
+			object val = GetValue(key, defaultValue, typeof(int));
 			return (int)val;
 		}
 
-		public double getDouble(string key, double defaultValue = 0)
+		public double GetDouble(string key, double defaultValue = 0)
 		{
-			object val = getValue(key, defaultValue, typeof(double));
+			object val = GetValue(key, defaultValue, typeof(double));
 			return (double)val;
 		}
 
-		public DateTime getDateTime(string key, DateTime defaultValue = default(DateTime))
+		public DateTime GetDateTime(string key, DateTime defaultValue = default(DateTime))
 		{
-			object val = getValue(key, defaultValue, typeof(DateTime));
+			object val = GetValue(key, defaultValue, typeof(DateTime));
 			return (DateTime)val;
 		}
 
-		public bool getBoolean(string key, bool defaultValue = false)
+		public bool GetBoolean(string key, bool defaultValue = false)
 		{
-			object val = getValue(key, defaultValue, typeof(bool));
+			object val = GetValue(key, defaultValue, typeof(bool));
 			return (bool)val;
 		}
 
-		void open(string fileName)
+		void Open(string fileName)
 		{
 			settings.Clear();
 			if (!File.Exists(fileName))
 				return;
 
 			using (StreamReader reader = new StreamReader(fileName, Encoding.UTF8, true)) {
-				open(reader);
+				Open(reader);
 			}
 		}
 
-		void open(StreamReader reader)
+		void Open(StreamReader reader)
 		{
 			string currentCategory = "/";
 			while (!reader.EndOfStream) {
@@ -219,8 +219,8 @@
 					// Category
 					int li = line.LastIndexOf(']');
 					if (li == -1) {
-						writeErrorToConsole("Error while opening: Missing ] at the end");
-						writeErrorToConsole("=> Ignoring line: " + line);
+						WriteErrorToConsole("Error while opening: Missing ] at the end");
+						WriteErrorToConsole("=> Ignoring line: " + line);
 						continue;
 					}
 
@@ -229,8 +229,8 @@
 					//Value
 					int keyEndeIndex = line.IndexOf('=');
 					if (keyEndeIndex == -1) {
-						writeErrorToConsole("Error while opening: Missing = after KeyName");
-						writeErrorToConsole("=> Ignoring line: " + line);
+						WriteErrorToConsole("Error while opening: Missing = after KeyName");
+						WriteErrorToConsole("=> Ignoring line: " + line);
 						continue;
 					}
 
@@ -238,8 +238,8 @@
 
 					int valAnfangIndex = line.IndexOf('"', keyEndeIndex);
 					if (valAnfangIndex == -1) { // ungültige Zeile
-						writeErrorToConsole("Error while opening key \"" + key + "\": Missing \" after =");
-						writeErrorToConsole("=> Ignoring line: " + line);
+						WriteErrorToConsole("Error while opening key \"" + key + "\": Missing \" after =");
+						WriteErrorToConsole("=> Ignoring line: " + line);
 						continue;
 					}
 
@@ -248,39 +248,39 @@
 						string typeString = line.Substring(keyEndeIndex + 1, valAnfangIndex - keyEndeIndex - 1).Trim();
 						valueType = System.Type.GetType(typeString); // Bei ungültigem Typ ist valueType null, und Typ string wird angenommen
 					} catch (Exception ex) {
-						writeErrorToConsole("Error while opening key \"" + key + "\": " + ex.Message);
-						writeErrorToConsole("=> Ignoring line: " + line);
+						WriteErrorToConsole("Error while opening key \"" + key + "\": " + ex.Message);
+						WriteErrorToConsole("=> Ignoring line: " + line);
 						continue;
 					}
 
 					int valEndeIndex = line.LastIndexOf('"');
 					if (valEndeIndex == -1 || valEndeIndex <= valAnfangIndex) {
-						writeErrorToConsole("Error while opening key \"" + key + "\": Missing \" at the end");
-						writeErrorToConsole("=> Ignoring line: " + line);
+						WriteErrorToConsole("Error while opening key \"" + key + "\": Missing \" at the end");
+						WriteErrorToConsole("=> Ignoring line: " + line);
 						continue;
 					}
 
-					string valueString = unEscapeString(line.Substring(valAnfangIndex + 1, valEndeIndex - valAnfangIndex - 1).Trim());
+					string valueString = UnEscapeString(line.Substring(valAnfangIndex + 1, valEndeIndex - valAnfangIndex - 1).Trim());
 					object val;
 					try {
-						val = getValueFromSaveString(valueString, valueType);
+						val = GetValueFromSaveString(valueString, valueType);
 					} catch (Exception ex) {
-						writeErrorToConsole("Error while opening key \"" + key + "\": " + ex.Message);
-						writeErrorToConsole("=> Ignoring line: " + line);
+						WriteErrorToConsole("Error while opening key \"" + key + "\": " + ex.Message);
+						WriteErrorToConsole("=> Ignoring line: " + line);
 						continue;
 					}
 
-					putValue(currentCategory + key, val);
+					PutValue(currentCategory + key, val);
 				}
 			}
 		}
 
-		static void writeErrorToConsole(string message)
+		static void WriteErrorToConsole(string message)
 		{
 			Console.Error.WriteLine("SettingsFile: " + message);
 		}
 
-		static object getValueFromSaveString(string value, Type type)
+		static object GetValueFromSaveString(string value, Type type)
 		{
 			if (typeof(string).IsAssignableFrom(type)) {
 				return value;
@@ -302,30 +302,30 @@
 			}
 		}
 
-		public void save(string fileName)
+		public void Save(string fileName)
 		{
 			using (StreamWriter writer = new StreamWriter(fileName, false, Encoding.UTF8)) {
 				writer.NewLine = "\r\n";
-				save(writer);
+				Save(writer);
 			}
 		}
 
-		void save(TextWriter writer)
+		void Save(TextWriter writer)
 		{
 			foreach (KeyValuePair<string, IDictionary<string, object>> category in settings) {
-				writer.WriteLine("[" + escapeString(category.Key) + "]");
+				writer.WriteLine("[" + EscapeString(category.Key) + "]");
 				foreach (KeyValuePair<string, object> kv in category.Value) {
 					string typeString = string.Empty;
 					if (!(kv.Value.GetType() == typeof(string))) {
 						typeString = kv.Value.GetType().ToString();
 					}
-					writer.WriteLine(escapeString(kv.Key) + " = " + typeString + "\"" + escapeString(getValueSaveString(kv.Value)) + "\"");
+					writer.WriteLine(EscapeString(kv.Key) + " = " + typeString + "\"" + EscapeString(GetValueSaveString(kv.Value)) + "\"");
 				}
 				writer.WriteLine();
 			}
 		}
 
-		static string getValueSaveString(object value)
+		static string GetValueSaveString(object value)
 		{
 			if (typeof(string).IsAssignableFrom(value.GetType())) {
 				return (string)value;
@@ -347,12 +347,12 @@
 			}
 		}
 
-		static string escapeString(string text)
+		static string EscapeString(string text)
 		{
 			return text.Replace("\\", "\\\\").Replace("\n", "\\n").Replace("\r", "\\r");
 		}
 
-		static string unEscapeString(string text)
+		static string UnEscapeString(string text)
 		{
 			StringBuilder sb = new StringBuilder(text.Length);
 			bool escaping = false;
