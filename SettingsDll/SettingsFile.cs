@@ -310,12 +310,12 @@
 			}
 		}
 
-		void save(StreamWriter writer)
+		void save(TextWriter writer)
 		{
 			foreach (KeyValuePair<string, IDictionary<string, object>> category in settings) {
 				writer.WriteLine("[" + escapeString(category.Key) + "]");
 				foreach (KeyValuePair<string, object> kv in category.Value) {
-					string typeString = "";
+					string typeString = string.Empty;
 					if (!(kv.Value.GetType() == typeof(string))) {
 						typeString = kv.Value.GetType().ToString();
 					}
