@@ -26,9 +26,19 @@
 		/// <param name='file'>
 		/// The Settings file that will be opened.
 		/// </param>
-		public SettingsFile(string file) : this()
+		public SettingsFile(string fileName) : this()
 		{
-			Open(file);
+			if (fileName == null) {
+				throw new ArgumentNullException("fileName");
+			}
+
+			if (File.Exists(fileName)) {
+				FileStream fs = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+				using (StreamReader reader = new StreamReader(fs, Encoding.UTF8, true)) {
+					Open(reader);
+				}
+			}
 		}
 
 		/// <summary>
@@ -73,8 +83,13 @@
 
 		void PutValue(string key, object value)
 		{
-			if (key == null)
-				return;
+			if (key == null) {
+				throw new ArgumentNullException("key");
+			}
+
+			if (value == null) {
+				throw new ArgumentNullException("value");
+			}
 
 			key = CorrectKey(key);
 			int li = key.LastIndexOf('/');
@@ -192,17 +207,6 @@
 		{
 			object val = GetValue(key, defaultValue, typeof(bool));
 			return (bool)val;
-		}
-
-		void Open(string fileName)
-		{
-			settings.Clear();
-			if (!File.Exists(fileName))
-				return;
-
-			using (StreamReader reader = new StreamReader(fileName, Encoding.UTF8, true)) {
-				Open(reader);
-			}
 		}
 
 		void Open(StreamReader reader)
