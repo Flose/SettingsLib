@@ -149,10 +149,11 @@
 			return tmpList;
 		}
 
-		object GetValue(string key, object defaultValue, Type type)
+		T GetValue<T>(string key, T defaultValue)
 		{
-			if (type == null)
-				return null;
+			if (key == null) {
+				throw new ArgumentNullException("key");
+			}
 
 			key = CorrectKey(key);
 			int li = key.LastIndexOf('/');
@@ -173,40 +174,35 @@
 				return defaultValue;
 			}
 
-			if (type.IsAssignableFrom(val.GetType()))
-				return val;
+			if (typeof(T).IsAssignableFrom(val.GetType()))
+				return (T)val;
 
-			throw new SettingsFileException("Tried to read \"" + key + "\" as \"" + type.ToString() + "\", but it's a \"" + val.GetType().ToString() + "\"");
+			throw new SettingsFileException("Tried to read \"" + key + "\" as \"" + typeof(T).ToString() + "\", but it's a \"" + val.GetType().ToString() + "\"");
 		}
 
 		public string GetString(string key, string defaultValue = "")
 		{
-			object val = GetValue(key, defaultValue, typeof(string));
-			return (string)val;
+			return GetValue<string>(key, defaultValue);
 		}
 
 		public int GetInteger(string key, int defaultValue = 0)
 		{
-			object val = GetValue(key, defaultValue, typeof(int));
-			return (int)val;
+			return GetValue<int>(key, defaultValue);
 		}
 
 		public double GetDouble(string key, double defaultValue = 0)
 		{
-			object val = GetValue(key, defaultValue, typeof(double));
-			return (double)val;
+			return GetValue<double>(key, defaultValue);
 		}
 
 		public DateTime GetDateTime(string key, DateTime defaultValue = default(DateTime))
 		{
-			object val = GetValue(key, defaultValue, typeof(DateTime));
-			return (DateTime)val;
+			return GetValue<DateTime>(key, defaultValue);
 		}
 
 		public bool GetBoolean(string key, bool defaultValue = false)
 		{
-			object val = GetValue(key, defaultValue, typeof(bool));
-			return (bool)val;
+			return GetValue<bool>(key, defaultValue);
 		}
 
 		void Open(StreamReader reader)
