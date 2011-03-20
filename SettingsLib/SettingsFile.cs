@@ -13,7 +13,7 @@
 		readonly IDictionary<string, IDictionary<string, object>> settings;
 
 		/// <summary>
-		/// Initializes a new empty instance of the <see cref="FloseCode.Settings.SettingsFile"/> class.
+		/// Initializes a new empty instance of the <see cref="FloseCode.SettingsLib.SettingsFile"/> class.
 		/// </summary>
 		public SettingsFile()
 		{
@@ -21,7 +21,7 @@
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="FloseCode.Settings.SettingsFile"/> class and loads settings from file.
+		/// Initializes a new instance of the <see cref="FloseCode.SettingsLib.SettingsFile"/> class and loads settings from file.
 		/// </summary>
 		/// <param name='file'>
 		/// The Settings file that will be opened.
@@ -224,7 +224,7 @@
 						continue;
 					}
 
-					currentCategory = line.Substring(1, li - 1) + '/';
+					currentCategory = line.Substring(1, li - 1) + "/";
 				} else {
 					//Value
 					int keyEndeIndex = line.IndexOf('=');
