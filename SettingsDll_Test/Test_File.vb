@@ -17,17 +17,17 @@ Public Class Test_File
         Dim value As Integer = 5345
         Dim errorMsg As String = "Key must not be empty"
 
-        Assert.Throws(Of SettingsFileException)(Sub() settings.putInteger(key, value), errorMsg)
-        Assert.Throws(Of SettingsFileException)(Sub() settings.getInteger(key), errorMsg)
-        Assert.Throws(Of SettingsFileException)(Sub() settings.getInteger(correctKey, value), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() settings.PutInteger(key, value), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() settings.GetInteger(key), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() settings.GetInteger(correctKey, value), errorMsg)
 
         value = 43234
-        Assert.Throws(Of SettingsFileException)(Sub() settings.getInteger(key), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() settings.GetInteger(key), errorMsg)
 
         value = 4343333
-        Assert.Throws(Of SettingsFileException)(Sub() settings.putInteger(correctKey, value), errorMsg)
-        Assert.Throws(Of SettingsFileException)(Sub() settings.getInteger(correctKey), errorMsg)
-        Assert.Throws(Of SettingsFileException)(Sub() settings.getInteger(key), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() settings.PutInteger(correctKey, value), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() settings.GetInteger(correctKey), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() settings.GetInteger(key), errorMsg)
     End Sub
 
     <Test()> _
@@ -35,70 +35,70 @@ Public Class Test_File
         Dim key As String = "fjda/jklfdj92432/&$§)jkfd/fdjk"
         Dim value As Integer = 5345
 
-        Assert.DoesNotThrow(Sub() settings.getInteger(key))
-        Assert.DoesNotThrow(Sub() settings.getString(key))
-        Assert.DoesNotThrow(Sub() settings.getBoolean(key))
+        Assert.DoesNotThrow(Sub() settings.GetInteger(key))
+        Assert.DoesNotThrow(Sub() settings.GetString(key))
+        Assert.DoesNotThrow(Sub() settings.GetBoolean(key))
 
-        settings.putInteger(key, value)
+        settings.PutInteger(key, value)
 
         Dim errorMsg As String
-        Assert.DoesNotThrow(Sub() settings.getInteger(key))
+        Assert.DoesNotThrow(Sub() settings.GetInteger(key))
         errorMsg = "Tried to read """ & key & """ as ""String"", but it's a """ & value.GetType().ToString() + """"
-        Assert.Throws(Of SettingsFileException)(Sub() settings.getString(key), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() settings.GetString(key), errorMsg)
         errorMsg = "Tried to read """ & key & """ as ""Boolean"", but it's a """ & value.GetType().ToString() + """"
-        Assert.Throws(Of SettingsFileException)(Sub() settings.getBoolean(key), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() settings.GetBoolean(key), errorMsg)
         errorMsg = "Tried to read """ & key & """ as ""Double"", but it's a """ & value.GetType().ToString() + """"
-        Assert.Throws(Of SettingsFileException)(Sub() settings.getDouble(key), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() settings.GetDouble(key), errorMsg)
         errorMsg = "Tried to read """ & key & """ as ""DateTime"", but it's a """ & value.GetType().ToString() + """"
-        Assert.Throws(Of SettingsFileException)(Sub() settings.getDateTime(key), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() settings.GetDateTime(key), errorMsg)
     End Sub
 
     <Test()> _
     Public Sub Test_put_Integer()
         Dim key As String = "ta/te/Test"
         Dim value As Integer = 5345
-        settings.putInteger(key, value)
-        Assert.AreEqual(value, settings.getInteger(key))
+        settings.PutInteger(key, value)
+        Assert.AreEqual(value, settings.GetInteger(key))
 
         value = 43234
-        Assert.AreNotEqual(value, settings.getInteger(key))
+        Assert.AreNotEqual(value, settings.GetInteger(key))
 
-        settings.putInteger(key, value)
-        Assert.AreEqual(value, settings.getInteger(key))
+        settings.PutInteger(key, value)
+        Assert.AreEqual(value, settings.GetInteger(key))
     End Sub
 
     <Test()> _
     Public Sub Test_put_Double()
         Dim key As String = "//fd/fd/Tesfda1t"
         Dim value As Double = 54.1
-        settings.putDouble(key, value)
-        Assert.AreEqual(value, settings.getDouble(key))
+        settings.PutDouble(key, value)
+        Assert.AreEqual(value, settings.GetDouble(key))
 
         value = 43234
-        Assert.AreNotEqual(value, settings.getDouble(key))
+        Assert.AreNotEqual(value, settings.GetDouble(key))
 
-        settings.putDouble(key, value)
-        Assert.AreEqual(value, settings.getDouble(key))
+        settings.PutDouble(key, value)
+        Assert.AreEqual(value, settings.GetDouble(key))
 
         value = 43234.4738248
-        Assert.AreNotEqual(value, settings.getDouble(key))
+        Assert.AreNotEqual(value, settings.GetDouble(key))
 
-        settings.putDouble(key, value)
-        Assert.AreEqual(value, settings.getDouble(key))
+        settings.PutDouble(key, value)
+        Assert.AreEqual(value, settings.GetDouble(key))
     End Sub
 
     <Test()> _
     Public Sub Test_put_Boolean()
         Dim key As String = "/43/Test"
         Dim value As Boolean = True
-        settings.putBoolean(key, value)
-        Assert.AreEqual(value, settings.getBoolean(key))
+        settings.PutBoolean(key, value)
+        Assert.AreEqual(value, settings.GetBoolean(key))
 
         value = False
-        Assert.AreNotEqual(value, settings.getBoolean(key))
+        Assert.AreNotEqual(value, settings.GetBoolean(key))
 
-        settings.putBoolean(key, value)
-        Assert.AreEqual(value, settings.getBoolean(key))
+        settings.PutBoolean(key, value)
+        Assert.AreEqual(value, settings.GetBoolean(key))
     End Sub
 
     <Test()> _
@@ -112,28 +112,28 @@ Public Class Test_File
     Private Sub test_put_string(ByVal text As String)
         Dim key As String = "/Test"
 
-        settings.putString(key, text)
-        Assert.AreEqual(text, settings.getString(key))
+        settings.PutString(key, text)
+        Assert.AreEqual(text, settings.GetString(key))
 
         text = "fjsdkajflsjkfiek"
-        Assert.AreNotEqual(text, settings.getString(key))
+        Assert.AreNotEqual(text, settings.GetString(key))
 
-        settings.putString(key, text)
-        Assert.AreEqual(text, settings.getString(key))
+        settings.PutString(key, text)
+        Assert.AreEqual(text, settings.GetString(key))
     End Sub
 
     <Test()> _
     Public Sub Test_put_DateTime()
         Dim key As String = "/ta/Test"
         Dim value As Date = New Date(477843578992835735)
-        settings.putDateTime(key, value)
-        Assert.AreEqual(value, settings.getDateTime(key))
+        settings.PutDateTime(key, value)
+        Assert.AreEqual(value, settings.GetDateTime(key))
 
         value = value.AddDays(43)
-        Assert.AreNotEqual(value, settings.getDateTime(key))
+        Assert.AreNotEqual(value, settings.GetDateTime(key))
 
-        settings.putDateTime(key, value)
-        Assert.AreEqual(value, settings.getDateTime(key))
+        settings.PutDateTime(key, value)
+        Assert.AreEqual(value, settings.GetDateTime(key))
     End Sub
 
     <Test()> _
@@ -146,13 +146,13 @@ Public Class Test_File
     Private Sub test_put_string_save_and_open(ByVal text As String)
         Dim key As String = "/!""§$%&/()=?`/TestSt"
 
-        settings.putString(key, text)
+        settings.PutString(key, text)
         Dim temp As String = IO.Path.GetTempFileName
-        settings.save(temp)
+        settings.Save(temp)
 
         Dim tmpSettings As New SettingsFile(temp)
 
-        Assert.AreEqual(text, tmpSettings.getString(key))
+        Assert.AreEqual(text, tmpSettings.GetString(key))
         IO.File.Delete(temp)
     End Sub
 
@@ -165,13 +165,13 @@ Public Class Test_File
     Private Sub test_put_Boolean_save_and_open(ByVal val As Boolean)
         Dim key As String = "/f/TestSt"
 
-        settings.putBoolean(key, val)
+        settings.PutBoolean(key, val)
         Dim temp As String = IO.Path.GetTempFileName
-        settings.save(temp)
+        settings.Save(temp)
 
         Dim tmpSettings As New SettingsFile(temp)
 
-        Assert.AreEqual(val, tmpSettings.getBoolean(key))
+        Assert.AreEqual(val, tmpSettings.GetBoolean(key))
         IO.File.Delete(temp)
     End Sub
 
@@ -180,13 +180,13 @@ Public Class Test_File
         Dim key As String = "//TestInt"
         Dim value As Integer = 5345
 
-        settings.putInteger(key, value)
+        settings.PutInteger(key, value)
         Dim temp As String = IO.Path.GetTempFileName
-        settings.save(temp)
+        settings.Save(temp)
 
         Dim tmpSettings As New SettingsFile(temp)
 
-        Assert.AreEqual(value, tmpSettings.getInteger(key))
+        Assert.AreEqual(value, tmpSettings.GetInteger(key))
         IO.File.Delete(temp)
     End Sub
 
@@ -203,13 +203,13 @@ Public Class Test_File
     Private Sub Test_put_double_Save_and_Open(ByVal Value As Double)
         Dim key As String = "////TestDoub5"
 
-        settings.putDouble(key, Value)
+        settings.PutDouble(key, Value)
         Dim temp As String = IO.Path.GetTempFileName
-        settings.save(temp)
+        settings.Save(temp)
 
         Dim tmpSettings As New SettingsFile(temp)
 
-        Assert.AreEqual(Value, tmpSettings.getDouble(key))
+        Assert.AreEqual(Value, tmpSettings.GetDouble(key))
         IO.File.Delete(temp)
     End Sub
 
@@ -227,13 +227,13 @@ Public Class Test_File
     Public Sub Test_put_DateTime_Save_and_Open(ByVal datum As DateTime)
         Dim key As String = "2/TestDat"
 
-        settings.putDateTime(key, datum)
+        settings.PutDateTime(key, datum)
         Dim temp As String = IO.Path.GetTempFileName
-        settings.save(temp)
+        settings.Save(temp)
 
         Dim tmpSettings As New SettingsFile(temp)
 
-        Assert.AreEqual(datum, tmpSettings.getDateTime(key))
+        Assert.AreEqual(datum, tmpSettings.GetDateTime(key))
         IO.File.Delete(temp)
     End Sub
 
@@ -256,10 +256,10 @@ Public Class Test_File
 
     Private Sub Test_correct_Key(ByVal key As String, ByVal correctKey As String)
         Try
-            Dim actual As String = DirectCast(UnitTestUtilities.RunInstanceMethod("correctKey", settings, New String() {key}), String)
+            Dim actual As String = DirectCast(UnitTestUtilities.RunInstanceMethod("CorrectKey", settings, New String() {key}), String)
             Assert.AreEqual(correctKey, actual)
 
-            actual = DirectCast(UnitTestUtilities.RunInstanceMethod("correctKey", settings, New String() {correctKey}), String)
+            actual = DirectCast(UnitTestUtilities.RunInstanceMethod("CorrectKey", settings, New String() {correctKey}), String)
             Assert.AreEqual(correctKey, actual)
         Catch ex As System.Reflection.TargetInvocationException
             Throw ex.InnerException
@@ -273,13 +273,13 @@ Public Class Test_File
 
         Dim value As String = "fds  fs()=="""""
 
-        settings.putString(key, value)
+        settings.PutString(key, value)
         Dim temp As String = IO.Path.GetTempFileName
-        settings.save(temp)
+        settings.Save(temp)
 
         Dim tmpSettings As New SettingsFile(temp)
-        Assert.AreEqual(value, tmpSettings.getString(key))
-        Assert.AreEqual(value, tmpSettings.getString(correctKey))
+        Assert.AreEqual(value, tmpSettings.GetString(key))
+        Assert.AreEqual(value, tmpSettings.GetString(correctKey))
 
         IO.File.Delete(temp)
     End Sub
@@ -291,17 +291,17 @@ Public Class Test_File
 
         Dim value As String = "fds  fs()=="""""
 
-        settings.putString(key, value)
-        Assert.AreEqual(value, settings.getString(key))
+        settings.PutString(key, value)
+        Assert.AreEqual(value, settings.GetString(key))
 
-        Assert.AreEqual(value, settings.getString(correctKey))
+        Assert.AreEqual(value, settings.GetString(correctKey))
 
 
         value = "fdsa><dfds  fs()=fdsfasd="""""
 
-        settings.putString(correctKey, value)
-        Assert.AreEqual(value, settings.getString(correctKey))
+        settings.PutString(correctKey, value)
+        Assert.AreEqual(value, settings.GetString(correctKey))
 
-        Assert.AreEqual(value, settings.getString(key))
+        Assert.AreEqual(value, settings.GetString(key))
     End Sub
 End Class
