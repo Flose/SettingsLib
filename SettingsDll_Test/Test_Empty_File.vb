@@ -145,6 +145,69 @@ Public Class Test_Empty_File
     End Sub
 
     <Test()> _
+    Public Sub Test_Remove_Key()
+        Dim settings As New SettingsFile()
+        Dim key As String = "jfds03"
+        Dim value As String = "fjsad83fjds229/$)§"
+        settings.PutString(key, value)
+
+        Dim key2 As String = "jfds03/43==fjds456kj84jl"
+        value = "fjafsdjf93474/(/)$§sad83fjds229/$)§"
+        settings.PutString(key2, value)
+
+        Dim key2b As String = "jfds03/43==fjdskj84j"
+        settings.PutInteger(key2b, 1)
+
+        Dim key3 As String = "///==""%&/jfds03/43==fjdskj84jl"
+        Dim value2 As Integer = 489343843
+        settings.PutInteger(key3, value2)
+
+        Assert.AreEqual(2, settings.GetAll(Of Object)(key).Count)
+        Assert.AreEqual(1, settings.GetAll(Of String)(key).Count)
+        Assert.AreEqual(1, settings.GetAll(Of Integer)(key).Count)
+
+        settings.RemoveKey(key, False)
+        Assert.AreEqual(2, settings.GetAll(Of Object)(key).Count)
+        Assert.AreEqual("", settings.GetString(key))
+        Assert.AreEqual(5, settings.GetInteger(key, 5))
+        Assert.AreEqual(value2, settings.GetInteger(key3))
+        Assert.AreEqual(value, settings.GetString(key2))
+
+        Assert.AreEqual(3, settings.GetAll.Count)
+    End Sub
+
+    <Test()> _
+    Public Sub Test_Remove_Key_And_Sub_Keys()
+        Dim settings As New SettingsFile()
+        Dim key As String = "jfds03"
+        Dim value As String = "fjsad83fjds229/$)§"
+        settings.PutString(key, value)
+
+        Dim key2 As String = "jfds03/43==fjds456kj84jl"
+        value = "fjafsdjf93474/(/)$§sad83fjds229/$)§"
+        settings.PutString(key2, value)
+
+        Dim key2b As String = "jfds03/43==fjdskj84j"
+        settings.PutInteger(key2b, 1)
+
+        Dim key3 As String = "///==""%&/jfds03/43==fjdskj84jl"
+        Dim value2 As Integer = 489343843
+        settings.PutInteger(key3, value2)
+
+        Assert.AreEqual(2, settings.GetAll(Of Object)(key).Count)
+        Assert.AreEqual(1, settings.GetAll(Of String)(key).Count)
+        Assert.AreEqual(1, settings.GetAll(Of Integer)(key).Count)
+
+        settings.RemoveKey(key)
+        Assert.AreEqual(0, settings.GetAll(Of Object)(key).Count)
+        Assert.AreEqual("", settings.GetString(key))
+        Assert.AreEqual(5, settings.GetInteger(key, 5))
+        Assert.AreEqual(value2, settings.GetInteger(key3))
+
+        Assert.AreEqual(1, settings.GetAll.Count)
+    End Sub
+
+    <Test()> _
     Public Sub Test_Save_and_Open_File_Change_Line_delimiter()
         'Save File
         Dim settings As New SettingsFile()

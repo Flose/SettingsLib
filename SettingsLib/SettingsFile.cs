@@ -226,19 +226,28 @@
 			return GetValue<bool>(key, defaultValue);
 		}
 
-		public void RemoveKey(string key)
+		public void RemoveKey(string key, bool removeSubKeys = true)
 		{
 			key = CorrectKey(key);
-			IDictionary<string, object> tmpList = new Dictionary<string, object>();
-			foreach (KeyValuePair<string, IDictionary<string, object>> c in settings) {
-				string currectCategory = c.Key;
-				if (key.StartsWith(key))
+			if (removeSubKeys)
+			{
+				foreach (KeyValuePair<string, IDictionary<string, object>> c in settings)
 				{
-					foreach (KeyValuePair<string, object> v in c.Value)
+					string currectCategory = c.Key;
+					if (currectCategory.StartsWith(key))
 					{
-						tmpList.Add(currectCategory + v.Key, v.Value);
+						c.Value.Clear();
 					}
 				}
+			}
+
+			int li = key.LastIndexOf('/');
+			string category = key.Substring(0, li + 1);
+			string name = key.Substring(li + 1);
+			IDictionary<string, object> categoryList;
+			if (settings.TryGetValue(category, out categoryList))
+			{
+				categoryList.Remove(name);
 			}
 		}
 
