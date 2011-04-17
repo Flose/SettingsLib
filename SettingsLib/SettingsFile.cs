@@ -138,12 +138,33 @@
 
 		public IDictionary<string, object> GetAll()
 		{
-			string currectCategory;
 			IDictionary<string, object> tmpList = new Dictionary<string, object>();
 			foreach (KeyValuePair<string, IDictionary<string, object>> c in settings) {
-				currectCategory = c.Key;
-				foreach (KeyValuePair<string, object> v in c.Value) {
+				string currectCategory = c.Key;
+				foreach (KeyValuePair<string, object> v in c.Value)
+				{
 					tmpList.Add(currectCategory + v.Key, v.Value);
+				}
+			}
+			return tmpList;
+		}
+
+		public IDictionary<string, T> GetAll<T>(string key)
+		{
+			key = CorrectKey(key);
+			IDictionary<string, T> tmpList = new Dictionary<string, T>();
+			foreach (KeyValuePair<string, IDictionary<string, object>> c in settings)
+			{
+				string currectCategory = c.Key;
+				if (currectCategory.StartsWith(key))
+				{
+					foreach (KeyValuePair<string, object> v in c.Value)
+					{
+						if (typeof(T).IsAssignableFrom(v.Value.GetType()))
+						{
+							tmpList.Add(currectCategory + v.Key, (T) v.Value);
+						}
+					}
 				}
 			}
 			return tmpList;
@@ -203,6 +224,22 @@
 		public bool GetBoolean(string key, bool defaultValue = false)
 		{
 			return GetValue<bool>(key, defaultValue);
+		}
+
+		public void RemoveKey(string key)
+		{
+			key = CorrectKey(key);
+			IDictionary<string, object> tmpList = new Dictionary<string, object>();
+			foreach (KeyValuePair<string, IDictionary<string, object>> c in settings) {
+				string currectCategory = c.Key;
+				if (key.StartsWith(key))
+				{
+					foreach (KeyValuePair<string, object> v in c.Value)
+					{
+						tmpList.Add(currectCategory + v.Key, v.Value);
+					}
+				}
+			}
 		}
 
 		void Open(StreamReader reader)
