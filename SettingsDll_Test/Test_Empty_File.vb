@@ -38,6 +38,12 @@ Public Class Test_Empty_File
     End Sub
 
     <Test()> _
+    Public Sub Test_Get_All_Key_Empty()
+        Dim settings As New SettingsFile()
+        Assert.AreEqual(0, settings.GetAll(Of Object)("test").Count)
+    End Sub
+
+    <Test()> _
     Public Sub Test_Get_All_Add_One()
         Dim settings As New SettingsFile()
         Dim key As String = "jfds03/fjdskj84jl"
@@ -46,6 +52,22 @@ Public Class Test_Empty_File
         settings.PutString(key, value)
         Assert.AreEqual(1, settings.GetAll.Count)
         Assert.AreEqual(value, settings.GetAll.Item(correctKey))
+    End Sub
+
+    <Test()> _
+    Public Sub Test_Get_All_Key_Add_One()
+        Dim settings As New SettingsFile()
+        Dim key As String = "jfds03/fjdskj84jl"
+        Dim correctKey As String = DirectCast(UnitTestUtilities.RunInstanceMethod("CorrectKey", settings, New String() {key}), String)
+        Dim value As String = "fjsad83fjds229/$)§"
+        settings.PutString(key, value)
+        Assert.AreEqual(1, settings.GetAll(Of String)("jfds03").Count)
+        Assert.AreEqual(0, settings.GetAll(Of String)("jfds3").Count)
+        Assert.AreEqual(0, settings.GetAll(Of Integer)("jfds03").Count)
+        Assert.AreEqual(1, settings.GetAll(Of Object)("jfds03").Count)
+        Assert.AreEqual(value, settings.GetAll(Of String)("jfds03").Item(correctKey))
+        Assert.AreEqual(value, settings.GetAll(Of Object)("jfds03").Item(correctKey))
+        Assert.AreEqual(value, settings.GetAll(Of String)().Item(correctKey))
     End Sub
 
     <Test()> _
@@ -94,6 +116,32 @@ Public Class Test_Empty_File
         settings.PutInteger(key, value2)
         Assert.AreEqual(3, settings.GetAll.Count)
         Assert.AreEqual(value2, settings.GetAll.Item(correctKey))
+    End Sub
+
+    <Test()> _
+    Public Sub Test_Get_All_Key_Add_Four()
+        Dim settings As New SettingsFile()
+        Dim key As String = "jfds03"
+        Dim value As String = "fjsad83fjds229/$)§"
+        settings.PutString(key, value)
+
+        Dim key2 As String = "jfds03/43==fjds456kj84jl"
+        value = "fjafsdjf93474/(/)$§sad83fjds229/$)§"
+        settings.PutString(key2, value)
+
+        Dim key2b As String = "jfds03/43==fjdskj84j"
+        settings.PutInteger(key2b, 1)
+
+        Dim key3 As String = "///==""%&/jfds03/43==fjdskj84jl"
+        Dim value2 As Integer = 489343843
+        settings.PutInteger(key3, value2)
+
+
+        Assert.AreEqual(2, settings.GetAll(Of Object)("jfds03").Count)
+        Assert.AreEqual(1, settings.GetAll(Of String)("jfds03").Count)
+        Assert.AreEqual(1, settings.GetAll(Of Integer)("jfds03").Count)
+        Assert.AreEqual(2, settings.GetAll(Of Integer)().Count)
+        Assert.AreEqual(2, settings.GetAll(Of String)().Count)
     End Sub
 
     <Test()> _

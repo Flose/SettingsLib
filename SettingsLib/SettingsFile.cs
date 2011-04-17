@@ -138,20 +138,20 @@
 
 		public IDictionary<string, object> GetAll()
 		{
-			IDictionary<string, object> tmpList = new Dictionary<string, object>();
-			foreach (KeyValuePair<string, IDictionary<string, object>> c in settings) {
-				string currectCategory = c.Key;
-				foreach (KeyValuePair<string, object> v in c.Value)
-				{
-					tmpList.Add(currectCategory + v.Key, v.Value);
-				}
-			}
-			return tmpList;
+			return GetAll<object>();
 		}
 
-		public IDictionary<string, T> GetAll<T>(string key)
+		public IDictionary<string, T> GetAll<T>(string key = null)
 		{
-			key = CorrectKey(key);
+			if (key == null)
+			{
+				key = "/";
+			}
+			else
+			{
+				key = CorrectKey(key);
+			}
+
 			IDictionary<string, T> tmpList = new Dictionary<string, T>();
 			foreach (KeyValuePair<string, IDictionary<string, object>> c in settings)
 			{
