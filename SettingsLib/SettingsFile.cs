@@ -156,7 +156,7 @@
 			foreach (KeyValuePair<string, IDictionary<string, object>> c in settings)
 			{
 				string currectCategory = c.Key;
-				if (currectCategory.StartsWith(key))
+				if (currectCategory.StartsWith(key, StringComparison.Ordinal))
 				{
 					foreach (KeyValuePair<string, object> v in c.Value)
 					{
@@ -234,7 +234,7 @@
 				foreach (KeyValuePair<string, IDictionary<string, object>> c in settings)
 				{
 					string currectCategory = c.Key;
-					if (currectCategory.StartsWith(key))
+					if (currectCategory.StartsWith(key, StringComparison.Ordinal))
 					{
 						c.Value.Clear();
 					}
