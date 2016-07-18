@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SettingsDll_Test", "SettingsDll_Test\SettingsDll_Test.vbproj", "{E5B39760-857F-4F58-A535-B0C33E191400}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SettingsLibTest", "SettingsDll_Test\SettingsLibTest.vbproj", "{E5B39760-857F-4F58-A535-B0C33E191400}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettingsLib", "SettingsLib\SettingsLib.csproj", "{DD2E2642-E707-443F-8BD8-1CE6FE2F79F4}"
 EndProject
