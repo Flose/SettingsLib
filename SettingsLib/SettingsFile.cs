@@ -203,27 +203,27 @@
 
 		public string GetString(string key, string defaultValue = "")
 		{
-			return GetValue<string>(key, defaultValue);
+			return GetValue(key, defaultValue);
 		}
 
 		public int GetInteger(string key, int defaultValue = 0)
 		{
-			return GetValue<int>(key, defaultValue);
+			return GetValue(key, defaultValue);
 		}
 
 		public double GetDouble(string key, double defaultValue = 0)
 		{
-			return GetValue<double>(key, defaultValue);
+			return GetValue(key, defaultValue);
 		}
 
 		public DateTime GetDateTime(string key, DateTime defaultValue = default(DateTime))
 		{
-			return GetValue<DateTime>(key, defaultValue);
+			return GetValue(key, defaultValue);
 		}
 
 		public bool GetBoolean(string key, bool defaultValue = false)
 		{
-			return GetValue<bool>(key, defaultValue);
+			return GetValue(key, defaultValue);
 		}
 
 		public void RemoveKey(string key, bool removeSubKeys = true)
