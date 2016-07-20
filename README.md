@@ -1,6 +1,6 @@
 # SettingsLib
 
-SettingsLib is a .Net library that provide a simple mechanism to store settings in a strongly-typed hierarchical INI like file format.
+SettingsLib is a .Net library that provides a simple mechanism to store settings in a strongly-typed hierarchical INI like file format.
 
 The library is available on NuGet: https://www.nuget.org/packages/FloseCode.SettingsLib/
 
