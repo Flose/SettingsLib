@@ -96,18 +96,18 @@
 			string category = key.Substring(0, li + 1);
 			string name = key.Substring(li + 1);
 
-			IDictionary<string, object> categoryPair;
+			IDictionary<string, object> categoryDict;
 			if (settings.ContainsKey(category)) {
-				categoryPair = settings[category];
+				categoryDict = settings[category];
 			} else {
-				categoryPair = new Dictionary<string, object>();
-				settings.Add(category, categoryPair);
+				categoryDict = new Dictionary<string, object>();
+				settings.Add(category, categoryDict);
 			}
 
-			if (categoryPair.ContainsKey(name)) {
-				categoryPair[name] = value;
+			if (categoryDict.ContainsKey(name)) {
+				categoryDict[name] = value;
 			} else {
-				categoryPair.Add(name, value);
+				categoryDict.Add(name, value);
 			}
 		}
 
@@ -181,16 +181,16 @@
 			string category = key.Substring(0, li + 1);
 			string name = key.Substring(li + 1);
 
-			IDictionary<string, object> categoryPair;
+			IDictionary<string, object> categoryDict;
 			if (settings.ContainsKey(category)) {
-				categoryPair = settings[category];
+				categoryDict = settings[category];
 			} else {
 				return defaultValue;
 			}
 
 			object val;
-			if (categoryPair.ContainsKey(name)) {
-				val = categoryPair[name];
+			if (categoryDict.ContainsKey(name)) {
+				val = categoryDict[name];
 			} else {
 				return defaultValue;
 			}
