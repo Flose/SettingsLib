@@ -81,6 +81,21 @@
 			return sb.ToString();
 		}
 
+		struct KeyCategoryAndName
+		{
+			public string category;
+			public string name;
+		}
+
+		static KeyCategoryAndName SplitKey(string key)
+		{
+			var li = key.LastIndexOf('/');
+			KeyCategoryAndName k;
+			k.category = key.Substring(0, li + 1);
+			k.name = key.Substring(li + 1);
+			return k;
+		}
+
 		void PutValue(string key, object value)
 		{
 			if (key == null) {
@@ -92,22 +107,20 @@
 			}
 
 			key = CorrectKey(key);
-			int li = key.LastIndexOf('/');
-			string category = key.Substring(0, li + 1);
-			string name = key.Substring(li + 1);
+			var k = SplitKey(key);
 
 			IDictionary<string, object> categoryDict;
-			if (settings.ContainsKey(category)) {
-				categoryDict = settings[category];
+			if (settings.ContainsKey(k.category)) {
+				categoryDict = settings[k.category];
 			} else {
 				categoryDict = new Dictionary<string, object>();
-				settings.Add(category, categoryDict);
+				settings.Add(k.category, categoryDict);
 			}
 
-			if (categoryDict.ContainsKey(name)) {
-				categoryDict[name] = value;
+			if (categoryDict.ContainsKey(k.name)) {
+				categoryDict[k.name] = value;
 			} else {
-				categoryDict.Add(name, value);
+				categoryDict.Add(k.name, value);
 			}
 		}
 
@@ -177,20 +190,18 @@
 			}
 
 			key = CorrectKey(key);
-			int li = key.LastIndexOf('/');
-			string category = key.Substring(0, li + 1);
-			string name = key.Substring(li + 1);
+			var k = SplitKey(key);
 
 			IDictionary<string, object> categoryDict;
-			if (settings.ContainsKey(category)) {
-				categoryDict = settings[category];
+			if (settings.ContainsKey(k.category)) {
+				categoryDict = settings[k.category];
 			} else {
 				return defaultValue;
 			}
 
 			object val;
-			if (categoryDict.ContainsKey(name)) {
-				val = categoryDict[name];
+			if (categoryDict.ContainsKey(k.name)) {
+				val = categoryDict[k.name];
 			} else {
 				return defaultValue;
 			}
@@ -241,13 +252,11 @@
 				}
 			}
 
-			int li = key.LastIndexOf('/');
-			string category = key.Substring(0, li + 1);
-			string name = key.Substring(li + 1);
+			var k = SplitKey(key);
 			IDictionary<string, object> categoryList;
-			if (settings.TryGetValue(category, out categoryList))
+			if (settings.TryGetValue(k.category, out categoryList))
 			{
-				categoryList.Remove(name);
+				categoryList.Remove(k.name);
 			}
 		}
 
