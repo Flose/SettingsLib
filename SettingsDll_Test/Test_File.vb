@@ -144,7 +144,7 @@ Public Class Test_File
     End Sub
 
     Private Sub test_put_string_save_and_open(ByVal text As String)
-        Dim key As String = "/!""§$%&/()=?`/TestSt"
+        Dim key As String = "/!""§$%&/()_?`/TestSt"
 
         settings.PutString(key, text)
         Dim temp As String = IO.Path.GetTempFileName
@@ -239,16 +239,17 @@ Public Class Test_File
 
     <Test()> _
     Public Sub Test_correct_Key()
-        Test_correct_Key("/ ", "/_")
-        Test_correct_Key(" / ", "/_/_")
-        Test_correct_Key("//// ", "/_")
         Test_correct_Key("abc", "/abc")
         Test_correct_Key("//abc", "/abc")
         Test_correct_Key("//a///bc", "/a/bc")
-        Test_correct_Key("=abc", "/_abc")
-        Test_correct_Key("/m  ann/t==e/fjdk""""sfjdkTe///s" & vbTab & "t=D""""a  t//", "/m__ann/t__e/fjdk""""sfjdkTe/s" & vbTab & "t_D""""a__t")
         Test_correct_Key("/m__ann/t__e/fjdk""""sfjdkTe/s" & vbTab & "t_D""""a__t", "/m__ann/t__e/fjdk""""sfjdkTe/s" & vbTab & "t_D""""a__t")
-        Dim errorMsg As String = "Key must not be empty"
+        Dim errorMsg As String = "Key with illegal char accepted"
+        Assert.Throws(Of SettingsFileException)(Sub() Test_correct_Key("/ ", "/_"), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() Test_correct_Key(" / ", "/ / "), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() Test_correct_Key("//// ", "/ "), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() Test_correct_Key("=abc", "/=abc"), errorMsg)
+        Assert.Throws(Of SettingsFileException)(Sub() Test_correct_Key("/m  ann/t==e/fjdk""""sfjdkTe///s" & vbTab & "t=D""""a  t//", "/m  ann/t==e/fjdk""""sfjdkTe/s" & vbTab & "t=D""""a  t"), errorMsg)
+        errorMsg = "Key must not be empty"
         Assert.Throws(Of SettingsFileException)(Sub() Test_correct_Key("", "/"), errorMsg)
         Assert.Throws(Of SettingsFileException)(Sub() Test_correct_Key("/", "/"), errorMsg)
         Assert.Throws(Of SettingsFileException)(Sub() Test_correct_Key("//////", "/"), errorMsg)
@@ -268,7 +269,7 @@ Public Class Test_File
 
     <Test()> _
     Public Sub Test_put_String_correct_Key_Open_and_Save()
-        Dim key As String = "/m  ann/t==e/fjdk""""sfjdkTe///s" & vbTab & "t=D""""a  t//"
+        Dim key As String = "/m__ann/t__e/fjdk""""sfjdkTe///s" & vbTab & "t_D""""a__t//"
         Dim correctKey As String = "/m__ann/t__e/fjdk""""sfjdkTe/s" & vbTab & "t_D""""a__t"
 
         Dim value As String = "fds  fs()=="""""
@@ -286,7 +287,7 @@ Public Class Test_File
 
     <Test()> _
     Public Sub Test_put_String_correct_Key()
-        Dim key As String = "/m  ann/t==e/fjdk""""sfjdkTe///s" & vbTab & "t=D""""a  t//"
+        Dim key As String = "/m__ann/t__e/fjdk""""sfjdkTe///s" & vbTab & "t_D""""a__t//"
         Dim correctKey As String = "/m__ann/t__e/fjdk""""sfjdkTe/s" & vbTab & "t_D""""a__t"
 
         Dim value As String = "fds  fs()=="""""

@@ -46,7 +46,7 @@
 		/// - a key must begin with '/'
 		/// - a key doesn't end with '/'
 		/// - not two '/' after each other
-		/// - ' ', '[', ']' and '=' are converted to '_'
+		/// - ' ', '[', ']' and '=' are forbidden, a <see cref="SettingsFileException"/> is raised
 		/// </summary>
 		/// <param name="key">
 		/// A <see cref="System.String"/> that will be converted to a correct SettingsFile key
@@ -71,7 +71,7 @@
 				if (c != ' ' && c != '[' && c != ']' && c != '=') {
 					sb.Append(c);
 				} else {
-					sb.Append("_");
+					throw new SettingsFileException("Key may not contain the following chars: ' ', '[', ']', '='");
 				}
 				previousWasSlash = c == '/';
 			}
@@ -316,7 +316,13 @@
 						continue;
 					}
 
-					PutValue(currentCategory + key, val);
+					try {
+						PutValue(currentCategory + key, val);
+					} catch (Exception ex) {
+						WriteErrorToConsole("Error while opening key \"" + key + "\": " + ex.Message);
+						WriteErrorToConsole("=> Ignoring line: " + line);
+						continue;
+					}
 				}
 			}
 		}

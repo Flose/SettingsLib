@@ -103,14 +103,14 @@ Public Class Test_Empty_File
         Assert.AreEqual(1, settings.GetAll.Count)
         Assert.AreEqual(value, settings.GetAll.Item(correctKey))
 
-        key = "jfds03/43==fjdskj84jl"
+        key = "jfds03/43__fjdskj84jl"
         correctKey = DirectCast(UnitTestUtilities.RunInstanceMethod("CorrectKey", settings, New String() {key}), String)
         value = "fjafsdjf93474/(/)$§sad83fjds229/$)§"
         settings.PutString(key, value)
         Assert.AreEqual(2, settings.GetAll.Count)
         Assert.AreEqual(value, settings.GetAll.Item(correctKey))
 
-        key = "///==""%&/jfds03/43==fjdskj84jl"
+        key = "///__""%&/jfds03/43__fjdskj84jl"
         correctKey = DirectCast(UnitTestUtilities.RunInstanceMethod("CorrectKey", settings, New String() {key}), String)
         Dim value2 As Integer = 489343843
         settings.PutInteger(key, value2)
@@ -125,14 +125,14 @@ Public Class Test_Empty_File
         Dim value As String = "fjsad83fjds229/$)§"
         settings.PutString(key, value)
 
-        Dim key2 As String = "jfds03/43==fjds456kj84jl"
+        Dim key2 As String = "jfds03/43__fjds456kj84jl"
         value = "fjafsdjf93474/(/)$§sad83fjds229/$)§"
         settings.PutString(key2, value)
 
-        Dim key2b As String = "jfds03/43==fjdskj84j"
+        Dim key2b As String = "jfds03/43__fjdskj84j"
         settings.PutInteger(key2b, 1)
 
-        Dim key3 As String = "///==""%&/jfds03/43==fjdskj84jl"
+        Dim key3 As String = "///__""%&/jfds03/43__fjdskj84jl"
         Dim value2 As Integer = 489343843
         settings.PutInteger(key3, value2)
 
@@ -151,14 +151,14 @@ Public Class Test_Empty_File
         Dim value As String = "fjsad83fjds229/$)§"
         settings.PutString(key, value)
 
-        Dim key2 As String = "jfds03/43==fjds456kj84jl"
+        Dim key2 As String = "jfds03/43__fjds456kj84jl"
         value = "fjafsdjf93474/(/)$§sad83fjds229/$)§"
         settings.PutString(key2, value)
 
-        Dim key2b As String = "jfds03/43==fjdskj84j"
+        Dim key2b As String = "jfds03/43__fjdskj84j"
         settings.PutInteger(key2b, 1)
 
-        Dim key3 As String = "///==""%&/jfds03/43==fjdskj84jl"
+        Dim key3 As String = "///__""%&/jfds03/43__fjdskj84jl"
         Dim value2 As Integer = 489343843
         settings.PutInteger(key3, value2)
 
@@ -183,14 +183,14 @@ Public Class Test_Empty_File
         Dim value As String = "fjsad83fjds229/$)§"
         settings.PutString(key, value)
 
-        Dim key2 As String = "jfds03/43==fjds456kj84jl"
+        Dim key2 As String = "jfds03/43__fjds456kj84jl"
         value = "fjafsdjf93474/(/)$§sad83fjds229/$)§"
         settings.PutString(key2, value)
 
-        Dim key2b As String = "jfds03/43==fjdskj84j"
+        Dim key2b As String = "jfds03/43__fjdskj84j"
         settings.PutInteger(key2b, 1)
 
-        Dim key3 As String = "///==""%&/jfds03/43==fjdskj84jl"
+        Dim key3 As String = "///__""%&/jfds03/43__fjdskj84jl"
         Dim value2 As Integer = 489343843
         settings.PutInteger(key3, value2)
 
