@@ -155,14 +155,14 @@
 			IDictionary<string, T> tmpList = new Dictionary<string, T>();
 			foreach (KeyValuePair<string, IDictionary<string, object>> c in settings)
 			{
-				string currectCategory = c.Key;
-				if (currectCategory.StartsWith(key, StringComparison.Ordinal))
+				string currentCategory = c.Key;
+				if (currentCategory.StartsWith(key, StringComparison.Ordinal))
 				{
 					foreach (KeyValuePair<string, object> v in c.Value)
 					{
 						if (typeof(T).IsAssignableFrom(v.Value.GetType()))
 						{
-							tmpList.Add(currectCategory + v.Key, (T) v.Value);
+							tmpList.Add(currentCategory + v.Key, (T) v.Value);
 						}
 					}
 				}
@@ -233,8 +233,8 @@
 			{
 				foreach (KeyValuePair<string, IDictionary<string, object>> c in settings)
 				{
-					string currectCategory = c.Key;
-					if (currectCategory.StartsWith(key, StringComparison.Ordinal))
+					string currentCategory = c.Key;
+					if (currentCategory.StartsWith(key, StringComparison.Ordinal))
 					{
 						c.Value.Clear();
 					}
