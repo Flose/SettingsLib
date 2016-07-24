@@ -6,10 +6,10 @@
     <title>Settings Library</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <projectUrl>https://www.mal-was-anderes.de</projectUrl>
+    <projectUrl>https://www.mal-was-anderes.de/SettingsLib</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>First release.</releaseNotes>
+    <releaseNotes>Throw exception for illegal chars in keys ('[', ']', '=', ' ').</releaseNotes>
     <copyright>Copyright Flose 2016</copyright>
     <tags>Setting library</tags>
   </metadata>
